@@ -63,6 +63,13 @@ class Player {
         this.speed_X = 100;
         this.speed_y = 83;
     }
+
+    update(){
+
+    }
+    render() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
 }
 
 
