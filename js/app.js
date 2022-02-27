@@ -50,6 +50,21 @@ class Enemy {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+class Player {
+    constructor() {
+        // The image/sprite for our player.
+        this.sprite = 'images/char-boy.png';
+
+        // set default location of player X: 200, Y: 400
+        this.x = 200;
+        this.y = 400;
+
+        // Set speed for player X: 100, Y: 83
+        this.speed_X = 100;
+        this.speed_y = 83;
+    }
+}
+
 
 
 // Now instantiate your objects.
