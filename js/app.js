@@ -7,6 +7,15 @@ class Enemy {
         // The image/sprite for our enemies, this uses
         // a helper we've provided to easily load images
         this.sprite = 'images/enemy-bug.png';
+
+        // Off screen locations of X(column) and Y(row) for randomly spawning enemies from given array.
+        // values are implemented from engine.js (line: 137)
+        this.location_X = [-101, -202, -303, -404];
+        this.location_Y = [83, 166, 249];
+        // Randomly set the enemy's starting position from the array above.
+        this.x = this.location_X[Math.floor(Math.random() * this.location_X.length)];
+        this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
+
     }
 
     // Update the enemy's position, required method for game
