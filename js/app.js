@@ -65,6 +65,19 @@ class Player {
     }
 
     update(){
+        // Check if player is on water. If so, reset player to default location.
+        if (this.y < 0) {
+            this.x = 200;
+            this.y = 400;
+        }
+
+        // Check if player collides with enemy. If so, reset player to default location.
+        allEnemies.forEach(function(enemy) {
+            if (enemy.x < player.x + 50 && enemy.x + 50 > player.x && enemy.y < player.y + 50 && enemy.y + 50 > player.y) {
+                player.x = 200;
+                player.y = 400;
+            }
+        });
 
     }
     render() {
