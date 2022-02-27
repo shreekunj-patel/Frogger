@@ -11,7 +11,7 @@ class Enemy {
         // Off screen locations of X(column) and Y(row) for randomly spawning enemies from given array.
         // values are implemented from engine.js (line: 137)
         this.location_X = [-101, -202, -303, -404];
-        this.location_Y = [83, 166, 249];
+        this.location_Y = [83-20, 166-20, 249-20]; // -20 to avoid bug on canvas border (top and bottom)
         // Randomly set the enemy's starting position from the array above.
         this.x = this.location_X[Math.floor(Math.random() * this.location_X.length)];
         this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
@@ -61,7 +61,7 @@ class Player {
 
         // Set speed for player X: 100, Y: 83
         this.speed_X = 100;
-        this.speed_y = 83;
+        this.speed_Y = 83;
     }
 
     update(){
@@ -69,6 +69,22 @@ class Player {
     }
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+
+    // Handle input from the user.
+    handleInput(key) {
+        if (key === 'left' && this.x > 0) {
+            this.x -= this.speed_X;
+        }
+        if (key === 'right' && this.x < 400) {
+            this.x += this.speed_X;
+        }
+        if (key === 'up' && this.y > 0) {
+            this.y -= this.speed_Y;
+        }
+        if (key === 'down' && this.y < 400) {
+            this.y += this.speed_Y;
+        }
     }
 }
 
