@@ -16,6 +16,9 @@ class Enemy {
         this.x = this.location_X[Math.floor(Math.random() * this.location_X.length)];
         this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
 
+        // Set the speed of the enemy. The speed is a random number between 100 and 700.
+        this.speed = Math.floor(Math.random() * (700 - 100 + 1)) + 100;
+
     }
 
     // Update the enemy's position, required method for game
