@@ -27,6 +27,16 @@ class Enemy {
         // You should multiply any movement by the dt parameter
         // which will ensure the game runs at the same speed for
         // all computers.
+        this.x = this.speed * dt + this.x;
+
+        // If the enemy is off screen, set its position randomly from location_X and location_Y arrays.
+        // and also update it's speed randomly. Basically, reset the enemy.
+        if (this.x > 505) {
+            this.x = this.location_X[Math.floor(Math.random() * this.location_X.length)];
+            this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
+            this.speed = Math.floor(Math.random() * (700 - 100 + 1)) + 100;
+        }
+
     }
 
     // Draw the enemy on the screen, required method for game
