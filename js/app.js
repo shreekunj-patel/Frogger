@@ -56,26 +56,55 @@ class Player {
         this.sprite = 'images/char-boy.png';
 
         // set default location of player X: 200, Y: 400
+        this.x = 0;
+        this.y = 0;
+        // Set speed for player X: 100, Y: 83
+        this.speed_X = 0;
+        this.speed_Y = 0;
+        this.playerPaused = false;
+
+        // reset player
+        this.reset();
+    }
+    // Check if player collides with enemy. If so, return true.
+    checkCollisions(enemy) {
+        return (this.x < enemy.x + 70 &&
+            this.x + 70 > enemy.x &&
+            this.y < enemy.y + 50 &&
+            50 + this.y > enemy.y);
+    }
+    // Resets Player
+    reset() {
         this.x = 200;
         this.y = 400;
+        this.resumeMovement();
 
+    }
+    // Pause movement of player
+    pauseMovement() {
+        this.playerPaused = true;
+        // pause player movement
+        this.speed_X = 0;
+        this.speed_Y = 0;
+    }
+    // Resume movement of player
+    resumeMovement() {
+        this.playerPaused = false;
         // Set speed for player X: 100, Y: 83
         this.speed_X = 100;
         this.speed_Y = 83;
     }
 
     update(){
-        // Check if player is on water. If so, reset player to default location.
+        // Check if player is on water.
+        // If so, reset player to default location.
         if (this.y < 0) {
-            this.x = 200;
-            this.y = 400;
+            // TODO: game.pause(); instead of this.pauseMovement();
+            this.pauseMovement();
         }
-
-        // Check if player collides with enemy. If so, reset player to default location.
-        allEnemies.forEach(function(enemy) {
-            if (enemy.x < player.x + 50 && enemy.x + 50 > player.x && enemy.y < player.y + 50 && enemy.y + 50 > player.y) {
-                player.x = 200;
-                player.y = 400;
+        allEnemies.forEach(enemy => {
+            if (this.checkCollisions(enemy)) {
+                this.reset();
             }
         });
 
