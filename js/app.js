@@ -82,6 +82,7 @@ class Player {
     }
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        game.render();
     }
 
     // Handle input from the user.
@@ -101,6 +102,28 @@ class Player {
     }
 }
 
+// GameUI class
+// this class is responsible for game score, lives and level.
+class GameUI {
+    constructor() {
+        this.score = 0;
+        this.lives = 3;
+        this.level = 1;
+    }
+
+    update() {
+
+    }
+
+    render() {
+        ctx.font = '20px sans-serif';
+        // fill text with material red color
+        ctx.fillStyle = '#b71c1c';
+        ctx.fillText('Score: ' + this.score, 10, 20);
+        ctx.fillText('Level: ' + this.level, 215, 20);
+        ctx.fillText('Lives: ' + this.lives, 420, 20);
+    }
+}
 
 
 // Now instantiate your objects.
@@ -118,7 +141,7 @@ function getEnemies() {
 }
 
 const allEnemies = getEnemies();
-
+game = new GameUI();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
