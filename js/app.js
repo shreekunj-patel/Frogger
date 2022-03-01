@@ -13,13 +13,33 @@ class Enemy {
         this.location_X = [-101, -202, -303, -404];
         this.location_Y = [83-20, 166-20, 249-20]; // -20 to avoid bug on canvas border (top and bottom)
         // Randomly set the enemy's starting position from the array above.
-        this.x = this.location_X[Math.floor(Math.random() * this.location_X.length)];
-        this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
+        this.x = 0;
+        this.y = 0;
 
         // Set the speed of the enemy. The speed is a random number between 100 and 700.
-        this.speed = Math.floor(Math.random() * (700 - 100 + 1)) + 100;
+        this.speed = 0;
+
+        // initialize the enemy's position
+        this.reset();
 
     }
+
+    // Reset enemy's position and speed.
+    reset() {
+        this.x = this.location_X[Math.floor(Math.random() * this.location_X.length)];
+        this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
+        this.resumeSpeed();
+
+    }
+    // Pause enemy's movement.
+    pauseSpeed() {
+        this.speed = 0;
+    }
+    // Resume enemy's movement.
+    resumeSpeed() {
+        this.speed = Math.floor(Math.random() * 700) + 100;
+    }
+
 
     // Update the enemy's position, required method for game
     // Parameter: dt, a time delta between ticks
@@ -34,7 +54,7 @@ class Enemy {
         if (this.x > 505) {
             this.x = this.location_X[Math.floor(Math.random() * this.location_X.length)];
             this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
-            this.speed = Math.floor(Math.random() * (700 - 100 + 1)) + 100;
+            this.resumeSpeed();
         }
 
     }
