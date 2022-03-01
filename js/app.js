@@ -23,6 +23,10 @@ class Enemy {
         this.reset();
 
     }
+    // TODO: Implement hide() unhide(). // hide and unhide enemy.
+    // TODO: Implement changeSprite(). // use different sprite for different enemies.
+    // TODO: Implement changeSpeed(). // changes enemy's speed when level is changed and this.sprite"*-mini.png" is used.
+    // TODO: Implement switchRow(). // randomly change enemy's row and if another enemy is in the same row, change it's row before colliding with another enemy.
 
     // Reset enemy's position and speed.
     reset() {
@@ -86,6 +90,11 @@ class Player {
         // reset player
         this.reset();
     }
+    // TODO: Implement checkWin(). // check if player.y is less than 0.
+    // TODO: Implement changeSprite(). // use different sprite for different players.
+    // TODO: Implement hide() unhide(). // hide and unhide player.
+    // TODO: Implement hide unhide player animation when player resets after collision.
+
     // Check if player collides with enemy. If so, return true.
     checkCollisions(enemy) {
         return (this.x < enemy.x + 70 &&
@@ -159,6 +168,15 @@ class GameUI {
         this.lives = 3;
         this.level = 1;
     }
+    // TODO: Implement changeBackground(). // change background sprite for different levels.
+    // TODO: Implement changeLevel(). // change level when player reaches top row. render new level.
+    // TODO: Implement changeLives(). // change lives when player collides with enemy and collects heart.
+    // TODO: Implement changeScore(). // change score when player reaches top row and collect gems.
+    // TODO: game.pause(); // pause game when player reaches top row.
+    // TODO: game.resume(); // resume game.
+    // TODO: game.reset(); // reset game.
+    // TODO: Implement animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
+    // TODO: Implement addHeart() and addGem(). // add heart and gem to the game. spawn heart and gem randomly on 2nd to 4th row and all columns. spawn gem every level. spawn heart rarely.
 
     update() {
 
