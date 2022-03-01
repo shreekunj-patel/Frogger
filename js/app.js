@@ -97,18 +97,18 @@ class Player {
     reset() {
         this.x = 200;
         this.y = 400;
-        this.resumeMovement();
+        this.resumeSpeed();
 
     }
     // Pause movement of player
-    pauseMovement() {
+    pauseSpeed() {
         this.playerPaused = true;
         // pause player movement
         this.speed_X = 0;
         this.speed_Y = 0;
     }
     // Resume movement of player
-    resumeMovement() {
+    resumeSpeed() {
         this.playerPaused = false;
         // Set speed for player X: 100, Y: 83
         this.speed_X = 100;
@@ -119,8 +119,8 @@ class Player {
         // Check if player is on water.
         // If so, reset player to default location.
         if (this.y < 0) {
-            // TODO: game.pause(); instead of this.pauseMovement();
-            this.pauseMovement();
+            // TODO: game.pause(); instead of this.pauseSpeed();
+            this.pauseSpeed();
         }
         allEnemies.forEach(enemy => {
             if (this.checkCollisions(enemy)) {
