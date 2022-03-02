@@ -11,7 +11,7 @@ class Enemy {
         // Off screen locations of X(column) and Y(row) for randomly spawning enemies from given array.
         // values are implemented from engine.js (line: 137)
         this.location_X = [-101, -202, -303, -404];
-        this.location_Y = [83-20, 166-20, 249-20]; // -20 to avoid bug on canvas border (top and bottom)
+        this.location_Y = [83 - 20, 166 - 20, 249 - 20]; // -20 to avoid bug on canvas border (top and bottom)
         // Randomly set the enemy's starting position from the array above.
         this.x = 0;
         this.y = 0;
@@ -23,10 +23,10 @@ class Enemy {
         this.reset();
 
     }
-    // TODO: Implement hide() unhide(). // hide and unhide enemy.
-    // TODO: Implement changeSprite(). // use different sprite for different enemies.
-    // TODO: Implement changeSpeed(). // changes enemy's speed when level is changed and this.sprite"*-mini.png" is used.
-    // TODO: Implement switchRow(). // randomly change enemy's row and if another enemy is in the same row, change it's row before colliding with another enemy.
+    // TODO: hide() unhide(). // hide and unhide enemy.
+    // TODO: changeSprite(). // use different sprite for different enemies.
+    // TODO: changeSpeed(). // changes enemy's speed when level is changed and this.sprite"*-mini.png" is used.
+    // TODO: switchRow(). // randomly change enemy's row and if another enemy is in the same row, change it's row before colliding with another enemy.
 
     // Reset enemy's position and speed.
     reset() {
@@ -90,10 +90,10 @@ class Player {
         // reset player
         this.reset();
     }
-    // TODO: Implement checkWin(). // check if player.y is less than 0.
-    // TODO: Implement changeSprite(). // use different sprite for different players.
-    // TODO: Implement hide() unhide(). // hide and unhide player.
-    // TODO: Implement hide unhide player animation when player resets after collision.
+    // TODO: checkWin(). // check if player.y is less than 0.
+    // TODO: changeSprite(). // use different sprite for different players.
+    // TODO: hide() unhide(). // hide and unhide player.
+    // TODO: hide unhide player animation when player resets after collision.
 
     // Check if player collides with enemy. If so, return true.
     checkCollisions(enemy) {
@@ -124,7 +124,7 @@ class Player {
         this.speed_Y = 83;
     }
 
-    update(){
+    update() {
         // Check if player is on water.
         // If so, reset player to default location.
         if (this.y < 0) {
@@ -168,15 +168,15 @@ class GameUI {
         this.lives = 3;
         this.level = 1;
     }
-    // TODO: Implement changeBackground(). // change background sprite for different levels.
-    // TODO: Implement changeLevel(). // change level when player reaches top row. render new level.
-    // TODO: Implement changeLives(). // change lives when player collides with enemy and collects heart.
-    // TODO: Implement changeScore(). // change score when player reaches top row and collect gems.
+    // TODO: changeBackground(). // change background sprite for different levels.
+    // TODO: changeLevel(). // change level when player reaches top row. render new level.
+    // TODO: changeLives(). // change lives when player collides with enemy and collects heart.
+    // TODO: changeScore(). // change score when player reaches top row and collect gems.
     // TODO: game.pause(); // pause game when player reaches top row.
     // TODO: game.resume(); // resume game.
     // TODO: game.reset(); // reset game.
-    // TODO: Implement animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
-    // TODO: Implement addHeart() and addGem(). // add heart and gem to the game. spawn heart and gem randomly on 2nd to 4th row and all columns. spawn gem every level. spawn heart rarely.
+    // TODO: animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
+    // TODO: addHeart() and addGem(). // add heart and gem to the game. spawn heart and gem randomly on 2nd to 4th row and all columns. spawn gem every level. spawn heart rarely.
 
     update() {
 
@@ -199,6 +199,7 @@ class GameUI {
 const player = new Player();
 
 const MAX_NO_OF_ENEMIES = 5;
+
 function getEnemies() {
     const enemies = [];
     for (let i = 0; i < MAX_NO_OF_ENEMIES; i++) {
@@ -212,7 +213,7 @@ game = new GameUI();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
