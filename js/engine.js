@@ -106,14 +106,7 @@ var Engine = (function (global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
-        var rowImages = [
-                'images/water-block.png', // Top row is water
-                'images/stone-block.png', // Row 1 of 3 of stone
-                'images/stone-block.png', // Row 2 of 3 of stone
-                'images/stone-block.png', // Row 3 of 3 of stone
-                'images/grass-block.png', // Row 1 of 2 of grass
-                'images/grass-block.png' // Row 2 of 2 of grass
-            ],
+        var rowImages = game.rowImages,
             numRows = 6,
             numCols = 5,
             row, col;
