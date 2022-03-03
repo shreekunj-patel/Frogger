@@ -164,10 +164,14 @@ class Player {
 // this class is responsible for game score, lives and level.
 class GameUI {
     constructor() {
+        // Set default values for game score, lives and level.
         this.score = 0;
         this.lives = 3;
         this.MAX_LIVES = 5;
         this.level = 1;
+        // Set default no of enemies and MAX_ENEMIES.
+        this.no_of_enemies = 2;
+        this.MAX_ENEMIES = 5;
         this.currentTopRowWater = true;
         // DONE: add Collectible Heart and Gem.
         // Heart: increase lives by 1. Max lives is 5.
@@ -216,6 +220,14 @@ class GameUI {
     // TODO: game.resume(); // resume game.
     // TODO: game.reset(); // reset game.
     // TODO: animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
+
+    getEnemies(noOfEnemies) {
+        const enemies = [];
+        for (let i = 0; i < noOfEnemies; i++) {
+            enemies.push(new Enemy());
+        }
+        return enemies;
+    }
 
     levelUp() {
         this.level++;
@@ -315,20 +327,9 @@ class GameUI {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 const player = new Player();
-
-const MAX_NO_OF_ENEMIES = 5;
-let currentNoOfEnemies = 2;
-
-function getEnemies(noOfEnemies) {
-    const enemies = [];
-    for (let i = 0; i < noOfEnemies; i++) {
-        enemies.push(new Enemy());
-    }
-    return enemies;
-}
-
-const allEnemies = getEnemies(currentNoOfEnemies);
 const game = new GameUI();
+
+const allEnemies = game.getEnemies(game.no_of_enemies);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
