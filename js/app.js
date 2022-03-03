@@ -168,6 +168,7 @@ class GameUI {
         this.lives = 3;
         this.MAX_LIVES = 5;
         this.level = 1;
+        this.currentTopRowWater = true;
         // DONE: add Collectible Heart and Gem.
         // Heart: increase lives by 1. Max lives is 5.
         // Gem: increase score by 1.
@@ -215,6 +216,19 @@ class GameUI {
     // TODO: game.reset(); // reset game.
     // TODO: animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
 
+    levelUp() {
+        this.level++;
+        this.score++;
+        this.changeBackground(this.currentTopRowWater); // Implement this. Given a boolean value, change top row to water abd bottom row to grass or vice versa.
+        collectibles = [this.Heart, this.Gem];
+        collectibles.forEach(item => {
+            if (Math.random() < item.probability) {
+                item.reset();
+            } else {
+                item.hide();
+            }
+        });
+    }
 
     update() {
 
