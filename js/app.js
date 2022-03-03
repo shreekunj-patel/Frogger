@@ -317,16 +317,16 @@ class GameUI {
 const player = new Player();
 
 const MAX_NO_OF_ENEMIES = 5;
-
-function getEnemies() {
+let currentNoOfEnemies = 2;
+function getEnemies(noOfEnemies) {
     const enemies = [];
-    for (let i = 0; i < MAX_NO_OF_ENEMIES; i++) {
+    for (let i = 0; i < noOfEnemies; i++) {
         enemies.push(new Enemy());
     }
     return enemies;
 }
 
-const allEnemies = getEnemies();
+const allEnemies = getEnemies(currentNoOfEnemies);
 game = new GameUI();
 
 // This listens for key presses and sends the keys to your
