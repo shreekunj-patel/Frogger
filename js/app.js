@@ -177,7 +177,7 @@ class GameUI {
         this.Heart = {
             sprite: 'images/Heart-mini.png',
             x: Math.floor(Math.random() * 5) * 101,
-            y: (Math.floor(Math.random() * 3) + 1) * 83-10,
+            y: (Math.floor(Math.random() * 3) + 1) * 83 - 10,
             // if this.level < 10, probability = 0.25 else probability = 0.1
             probability: this.level < 10 ? 0.25 : 0.1,
             info: 'Collect hearts to gain a life. However Max lives is ' + this.MAX_LIVES + '.',
@@ -187,14 +187,14 @@ class GameUI {
             },
             reset: function () {
                 this.x = Math.floor(Math.random() * 5) * 101;
-                this.y = (Math.floor(Math.random() * 3) + 1) * 83-10;
+                this.y = (Math.floor(Math.random() * 3) + 1) * 83 - 10;
             }
         };
         this.Gem = {
             sprites: ['images/Gem Blue-mini.png', 'images/Gem Green-mini.png', 'images/Gem Orange-mini.png'],
             sprite: 'images/Gem Orange-mini.png',
             x: Math.floor(Math.random() * 5) * 101,
-            y: (Math.floor(Math.random() * 3) + 1) * 83-30,
+            y: (Math.floor(Math.random() * 3) + 1) * 83 - 30,
             probability: 9.8,
             info: 'Collect gems to gain a score.',
             hide: function () {
@@ -203,7 +203,7 @@ class GameUI {
             },
             reset: function () {
                 this.x = Math.floor(Math.random() * 5) * 101;
-                this.y = (Math.floor(Math.random() * 3) + 1) * 83-30;
+                this.y = (Math.floor(Math.random() * 3) + 1) * 83 - 30;
             }
         };
         this.collectibles = [this.Heart, this.Gem];
@@ -318,6 +318,7 @@ const player = new Player();
 
 const MAX_NO_OF_ENEMIES = 5;
 let currentNoOfEnemies = 2;
+
 function getEnemies(noOfEnemies) {
     const enemies = [];
     for (let i = 0; i < noOfEnemies; i++) {
@@ -327,7 +328,7 @@ function getEnemies(noOfEnemies) {
 }
 
 const allEnemies = getEnemies(currentNoOfEnemies);
-game = new GameUI();
+const game = new GameUI();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
