@@ -226,15 +226,16 @@ class GameUI {
             'images/grass-block.png', // Row 1 of 2 of grass
             'images/grass-block.png' // Row 2 of 2 of grass
         ];
+        // previouse row images.
+        this.prevRowImages = this.rowImages;
     }
-    // TODO: changeBackground(). // change background sprite for different levels.
-    // TODO: changeLevel(). // change level when player reaches top row. render new level.
+    // DONE: changeBackground(). // change background sprite for different levels.
+    // NOT NEEDED: animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
     // TODO: changeLives(). // change lives when player collides with enemy and collects heart.
     // TODO: changeScore(). // change score when player reaches top row and collect gems.
-    // TODO: game.pause(); // pause game when player reaches top row.
-    // TODO: game.resume(); // resume game.
+    // DONE: game.pause(); // pause game when player reaches top row.
+    // DONE: game.resume(); // resume game.
     // TODO: game.reset(); // reset game.
-    // TODO: animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
 
     // Game pause.
     // pauses gameUI, player and enemies.
@@ -302,63 +303,46 @@ class GameUI {
         }
 
         // change background Images.
-        this.rowImages = this.backgroundImages(this.currentTopRowWater);
+        this.changeBackground(this.currentTopRowWater);
         // this.changeBackground(this.currentTopRowWater); // Implement this. Given a boolean value, change top row to water abd bottom row to grass or vice versa.
-        this.collectibles.forEach(item => {
-            if (Math.random() < item.probability) {
-                item.reset();
-            } else {
-                item.hide();
-            }
-        });
+        // spawn collectibles after background change.
+        setTimeout(() => {
+            this.collectibles.forEach(item => {
+                if (Math.random() < item.probability) {
+                    item.reset();
+                } else {
+                    item.hide();
+                }
+            });
+        }, 2150);
     }
 
-    backgroundImages(currentTopRowWater) {
-        // hide collectibles
-        this.collectibles.forEach(item => {
-            item.hide();
-        });
-        // hide enemies
-        allEnemies.forEach(enemy => {
-            // enemy.hide();
-        });
-        // this.pauseGame(); // Implement this.
-        const water_sprites = [
-                'images/water-block.png',
-                'images/water-block-2.png',
-                'images/water-block-3.png'
-            ],
-            grass_sprites = [
-                'images/grass-block.png',
-                'images/grass-block-2.png',
-                'images/grass-block-3.png',
-                'images/grass-block-4.png',
-                'images/grass-block-5.png',
-                'images/grass-block-6.png',
-                'images/grass-block-7.png',
-                'images/grass-block-8.png'
-            ],
-            stone_sprites = [
-                'images/stone-block.png',
-                'images/stone-block-2.png',
-                'images/stone-block-3.png',
-                'images/stone-block-4.png',
-                'images/stone-block-5.png'
-            ];
+    changeBackground(currentTopRowWater) {
+        // pause game if not paused.
+        if (!this.status_pause) {
+            this.pause();
+        }
         const WATER = water_sprites[Math.floor(Math.random() * water_sprites.length)],
+            WATER_OLD = this.prevRowImages[0],
             GRASS = grass_sprites[Math.floor(Math.random() * grass_sprites.length)],
+            GRASS_OLD = this.prevRowImages[5],
             STONE = stone_sprites[Math.floor(Math.random() * stone_sprites.length)],
-            NO_ROWS = 6,
-            NO_COLS = 5;
+            STONE_OLD = this.prevRowImages[1];
 
-        let rowImages, row, col;
+        let rowImages1, rowImages2, rowImages3, rowImages4, rowImages5;
 
         if (currentTopRowWater) {
-            rowImages = [GRASS, STONE, STONE, STONE, WATER, WATER];
-            this.currentTopRowWater = false;
+            rowImages1 = [WATER_OLD, WATER_OLD, STONE_OLD, STONE_OLD, STONE_OLD, GRASS_OLD];
+            rowImages2 = [STONE, WATER_OLD, WATER_OLD, STONE_OLD, STONE_OLD, STONE_OLD];
+            rowImages3 = [STONE, STONE, WATER_OLD, WATER_OLD, STONE_OLD, STONE_OLD];
+            rowImages4 = [STONE, STONE, STONE, WATER_OLD, WATER_OLD, STONE_OLD];
+            rowImages5 = [GRASS, STONE, STONE, STONE, WATER_OLD, WATER_OLD];
         } else {
-            rowImages = [WATER, STONE, STONE, STONE, GRASS, GRASS];
-            this.currentTopRowWater = true;
+            rowImages1 = [GRASS_OLD, GRASS_OLD, STONE_OLD, STONE_OLD, STONE_OLD, WATER_OLD];
+            rowImages2 = [STONE, GRASS_OLD, GRASS_OLD, STONE_OLD, STONE_OLD, STONE_OLD];
+            rowImages3 = [STONE, STONE, GRASS_OLD, GRASS_OLD, STONE_OLD, STONE_OLD];
+            rowImages4 = [STONE, STONE, STONE, GRASS_OLD, GRASS_OLD, STONE_OLD];
+            rowImages5 = [WATER, STONE, STONE, STONE, GRASS_OLD, GRASS_OLD];
         }
 
         // for (row = 0; row < NO_ROWS; row++) {
@@ -367,7 +351,89 @@ class GameUI {
         //     }
         // }
 
-        return rowImages; // this will be used in engine.js function render().
+        const speed_Y = player.paused ? 83 : player.speed_Y;
+
+        setTimeout(() => {
+            this.rowImages = rowImages1;
+            // move player down according to player's speed.
+            player.y += speed_Y;
+            allEnemies.forEach(enemy => {
+                enemy.y += speed_Y;
+                enemy.x = enemy.y > 400 ? -101 : enemy.x;
+            });
+            this.collectibles.forEach(item => {
+                item.y += speed_Y;
+                if (item.y > 410) {
+                    item.hide();
+                }
+            });
+            console.log(player.y);
+        }, 0);
+        setTimeout(() => {
+            this.rowImages = rowImages2;
+            player.y += speed_Y;
+            allEnemies.forEach(enemy => {
+                enemy.y += speed_Y;
+                enemy.x = enemy.y > 400 ? -101 : enemy.x;
+            });
+            this.collectibles.forEach(item => {
+                item.y += speed_Y;
+                if (item.y > 410) {
+                    item.hide();
+                }
+            });
+            console.log(player.y);
+        }, 500);
+        setTimeout(() => {
+            this.rowImages = rowImages3;
+            player.y += speed_Y;
+            allEnemies.forEach(enemy => {
+                enemy.y += speed_Y;
+                enemy.x = enemy.y > 400 ? -101 : enemy.x;
+            });
+            this.collectibles.forEach(item => {
+                item.y += speed_Y;
+                if (item.y > 410) {
+                    item.hide();
+                }
+            });
+            console.log(player.y);
+        }, 1000);
+        setTimeout(() => {
+            this.rowImages = rowImages4;
+            player.y += speed_Y;
+            allEnemies.forEach(enemy => {
+                enemy.y += speed_Y;
+                enemy.x = enemy.y > 400 ? -101 : enemy.x;
+            });
+            this.collectibles.forEach(item => {
+                item.y += speed_Y;
+                if (item.y > 410) {
+                    item.hide();
+                }
+            });
+            console.log(player.y);
+        }, 1500);
+        setTimeout(() => {
+            this.rowImages = rowImages5;
+            player.y += speed_Y;
+            allEnemies.forEach(enemy => {
+                enemy.y += speed_Y;
+                enemy.x = enemy.y > 400 ? -101 : enemy.x;
+            });
+            this.collectibles.forEach(item => {
+                item.y += speed_Y;
+                if (item.y > 410) {
+                    item.hide();
+                }
+            });
+            console.log(player.y);
+        }, 2000);
+
+        this.currentTopRowWater = !this.currentTopRowWater;
+        this.prevRowImages = this.rowImages;
+
+        // return rowImages; // this will be used in engine.js function render().
 
     }
 
@@ -391,6 +457,28 @@ class GameUI {
 
     }
 }
+
+// Constants for background images
+const water_sprites = [
+        'images/water-block.png',
+        'images/water-block-2.png',
+        'images/water-block-3.png'
+    ],
+    grass_sprites = [
+        'images/grass-block.png',
+        'images/grass-block-2.png',
+        'images/grass-block-3.png',
+        'images/grass-block-4.png',
+        'images/grass-block-5.png',
+        'images/grass-block-6.png',
+        'images/grass-block-7.png',
+        'images/grass-block-8.png'
+    ],
+    stone_sprites = [
+        'images/stone-block.png',
+        'images/stone-block-2.png',
+        'images/stone-block-4.png',
+    ];
 
 
 // Now instantiate your objects.
