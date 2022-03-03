@@ -85,7 +85,7 @@ class Player {
         // Set speed for player X: 100, Y: 83
         this.speed_X = 0;
         this.speed_Y = 0;
-        this.playerPaused = false;
+        this.paused = false;
 
         // reset player
         this.reset();
@@ -111,14 +111,14 @@ class Player {
     }
     // Pause movement of player
     pauseSpeed() {
-        this.playerPaused = true;
+        this.paused = true;
         // pause player movement
         this.speed_X = 0;
         this.speed_Y = 0;
     }
     // Resume movement of player
     resumeSpeed() {
-        this.playerPaused = false;
+        this.paused = false;
         // Set speed for player X: 100, Y: 83
         this.speed_X = 100;
         this.speed_Y = 83;
