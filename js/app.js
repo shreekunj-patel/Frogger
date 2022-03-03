@@ -227,6 +227,47 @@ class GameUI {
     // TODO: game.reset(); // reset game.
     // TODO: animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
 
+    // Game pause.
+    // pauses gameUI, player and enemies.
+    pause() {
+        this.status_pause = true;
+        player.pauseSpeed();
+        allEnemies.forEach(enemy => {
+            enemy.pauseSpeed();
+        });
+    }
+
+    // Game resume.
+    // resumes gameUI, player and enemies.
+    resume() {
+        this.status_pause = false;
+        player.resumeSpeed();
+        allEnemies.forEach(enemy => {
+            enemy.resumeSpeed();
+        });
+    }
+
+    // Game reset.
+    // resets gameUI, player and enemies.
+    reset() {
+        this.status_start = true;
+        this.status_win = false;
+        this.status_lose = false;
+        this.status_pause = false;
+        this.score = 0;
+        this.lives = 3;
+        this.level = 1;
+        this.no_of_enemies = 2;
+        this.MAX_ENEMIES = 5;
+        this.currentTopRowWater = true;
+        player.reset();
+        allEnemies.forEach(enemy => {
+            enemy.reset();
+        });
+        this.Heart.reset();
+        this.Gem.reset();
+    }
+
     getEnemies(noOfEnemies) {
         const enemies = [];
         for (let i = 0; i < noOfEnemies; i++) {
