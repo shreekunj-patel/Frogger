@@ -218,6 +218,14 @@ class GameUI {
             }
         };
         this.collectibles = [this.Heart, this.Gem];
+        this.rowImages = [
+            'images/water-block.png', // Top row is water
+            'images/stone-block.png', // Row 1 of 3 of stone
+            'images/stone-block.png', // Row 2 of 3 of stone
+            'images/stone-block.png', // Row 3 of 3 of stone
+            'images/grass-block.png', // Row 1 of 2 of grass
+            'images/grass-block.png' // Row 2 of 2 of grass
+        ];
     }
     // TODO: changeBackground(). // change background sprite for different levels.
     // TODO: changeLevel(). // change level when player reaches top row. render new level.
@@ -278,9 +286,24 @@ class GameUI {
     }
 
     levelUp() {
+        // Pause game if not paused.
+        if (!this.status_pause) {
+            this.pause();
+        }
+        // change win_status to true.
+        this.status_win = true;
+        // Increase level and score by 1.
         this.level++;
         this.score++;
-        this.changeBackground(this.currentTopRowWater); // Implement this. Given a boolean value, change top row to water abd bottom row to grass or vice versa.
+        // Increase no of enemies by 1 till MAX_ENEMIES every 10 levels.
+        if (this.level % 10 === 0 && this.no_of_enemies < this.MAX_ENEMIES) {
+            this.no_of_enemies++;
+            // TODO: allEnemies = getEnemies(no_of_enemies);
+        }
+
+        // change background Images.
+        this.rowImages = this.backgroundImages(this.currentTopRowWater);
+        // this.changeBackground(this.currentTopRowWater); // Implement this. Given a boolean value, change top row to water abd bottom row to grass or vice versa.
         this.collectibles.forEach(item => {
             if (Math.random() < item.probability) {
                 item.reset();
@@ -349,7 +372,6 @@ class GameUI {
     }
 
     update() {
-
     }
 
     render() {
