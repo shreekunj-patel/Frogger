@@ -164,6 +164,12 @@ class Player {
 // this class is responsible for game score, lives and level.
 class GameUI {
     constructor() {
+        // Set default game statuses.
+        this.status_start = true;
+        this.status_win = false;
+        this.status_lose = false;
+        this.status_pause = false;
+
         // Set default values for game score, lives and level.
         this.score = 0;
         this.lives = 3;
