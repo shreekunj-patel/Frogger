@@ -128,8 +128,9 @@ class Player {
         // Check if player is on water.
         // If so, reset player to default location.
         if (this.y < 0) {
-            // TODO: game.pause(); instead of this.pauseSpeed();
-            this.pauseSpeed();
+            game.pause();
+            game.levelUp();
+            // TODO: game.resume(), change background image.
         }
         allEnemies.forEach(enemy => {
             if (this.checkCollisions(enemy)) {
