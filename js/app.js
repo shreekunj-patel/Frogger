@@ -206,6 +206,7 @@ class GameUI {
                 this.y = (Math.floor(Math.random() * 3) + 1) * 83-30;
             }
         };
+        this.collectibles = [this.Heart, this.Gem];
     }
     // TODO: changeBackground(). // change background sprite for different levels.
     // TODO: changeLevel(). // change level when player reaches top row. render new level.
@@ -220,14 +221,71 @@ class GameUI {
         this.level++;
         this.score++;
         this.changeBackground(this.currentTopRowWater); // Implement this. Given a boolean value, change top row to water abd bottom row to grass or vice versa.
-        collectibles = [this.Heart, this.Gem];
-        collectibles.forEach(item => {
+        this.collectibles.forEach(item => {
             if (Math.random() < item.probability) {
                 item.reset();
             } else {
                 item.hide();
             }
         });
+    }
+
+    backgroundImages(currentTopRowWater) {
+        // hide collectibles
+        this.collectibles.forEach(item => {
+            item.hide();
+        });
+        // hide enemies
+        allEnemies.forEach(enemy => {
+            // enemy.hide();
+        });
+        // this.pauseGame(); // Implement this.
+        const water_sprites = [
+                'images/water-block.png',
+                'images/water-block-2.png',
+                'images/water-block-3.png'
+            ],
+            grass_sprites = [
+                'images/grass-block.png',
+                'images/grass-block-2.png',
+                'images/grass-block-3.png',
+                'images/grass-block-4.png',
+                'images/grass-block-5.png',
+                'images/grass-block-6.png',
+                'images/grass-block-7.png',
+                'images/grass-block-8.png'
+            ],
+            stone_sprites = [
+                'images/stone-block.png',
+                'images/stone-block-2.png',
+                'images/stone-block-3.png',
+                'images/stone-block-4.png',
+                'images/stone-block-5.png'
+            ];
+        const WATER = water_sprites[Math.floor(Math.random() * water_sprites.length)],
+            GRASS = grass_sprites[Math.floor(Math.random() * grass_sprites.length)],
+            STONE = stone_sprites[Math.floor(Math.random() * stone_sprites.length)],
+            NO_ROWS = 6,
+            NO_COLS = 5;
+
+        let rowImages, row, col;
+
+        if (currentTopRowWater) {
+            rowImages = [GRASS, STONE, STONE, STONE, WATER, WATER];
+            this.currentTopRowWater = false;
+        } else {
+            rowImages = [WATER, STONE, STONE, STONE, GRASS, GRASS];
+            this.currentTopRowWater = true;
+        }
+
+        // for (row = 0; row < NO_ROWS; row++) {
+        //     for (col = 0; col< NO_COLS; col++) {
+        //         ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+        //     }
+        // }
+
+        return rowImages; // this will be used in engine.js function render().
+
     }
 
     update() {
