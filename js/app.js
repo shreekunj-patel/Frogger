@@ -166,7 +166,45 @@ class GameUI {
     constructor() {
         this.score = 0;
         this.lives = 3;
+        this.MAX_LIVES = 5;
         this.level = 1;
+        // DONE: add Collectible Heart and Gem.
+        // Heart: increase lives by 1. Max lives is 5.
+        // Gem: increase score by 1.
+        // spawn heart and gem randomly.
+        // spawn gem every level. spawn heart rarely.
+        this.Heart = {
+            sprite: 'images/Heart-mini.png',
+            x: Math.floor(Math.random() * 5) * 101,
+            y: (Math.floor(Math.random() * 3) + 1) * 83-10,
+            // if this.level < 10, probability = 0.25 else probability = 0.1
+            probability: this.level < 10 ? 0.25 : 0.1,
+            info: 'Collect hearts to gain a life. However Max lives is ' + this.MAX_LIVES + '.',
+            hide: function () {
+                this.x = -200;
+                this.y = -200;
+            },
+            reset: function () {
+                this.x = Math.floor(Math.random() * 5) * 101;
+                this.y = (Math.floor(Math.random() * 3) + 1) * 83-10;
+            }
+        };
+        this.Gem = {
+            sprites: ['images/Gem Blue-mini.png', 'images/Gem Green-mini.png', 'images/Gem Orange-mini.png'],
+            sprite: 'images/Gem Orange-mini.png',
+            x: Math.floor(Math.random() * 5) * 101,
+            y: (Math.floor(Math.random() * 3) + 1) * 83-30,
+            probability: 9.8,
+            info: 'Collect gems to gain a score.',
+            hide: function () {
+                this.x = -200;
+                this.y = -200;
+            },
+            reset: function () {
+                this.x = Math.floor(Math.random() * 5) * 101;
+                this.y = (Math.floor(Math.random() * 3) + 1) * 83-30;
+            }
+        };
     }
     // TODO: changeBackground(). // change background sprite for different levels.
     // TODO: changeLevel(). // change level when player reaches top row. render new level.
@@ -176,7 +214,7 @@ class GameUI {
     // TODO: game.resume(); // resume game.
     // TODO: game.reset(); // reset game.
     // TODO: animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
-    // TODO: addHeart() and addGem(). // add heart and gem to the game. spawn heart and gem randomly on 2nd to 4th row and all columns. spawn gem every level. spawn heart rarely.
+
 
     update() {
 
@@ -186,9 +224,17 @@ class GameUI {
         ctx.font = '20px sans-serif';
         // fill text with material red color
         ctx.fillStyle = '#b71c1c';
-        ctx.fillText('Score: ' + this.score, 10, 20);
-        ctx.fillText('Level: ' + this.level, 215, 20);
-        ctx.fillText('Lives: ' + this.lives, 420, 20);
+        ctx.fillText('Score: ' + this.score, 10, 25);
+        ctx.fillText('Level: ' + this.level, 215, 25);
+        ctx.fillText('Lives: ' + this.lives, 420, 25);
+
+        // draw heart according to probability
+        ctx.drawImage(Resources.get(this.Heart.sprite), this.Heart.x, this.Heart.y);
+        // draw gem
+        //this.Gem.sprite = this.Gem.sprites[Math.floor(Math.random() * this.Gem.sprites.length)];
+        ctx.drawImage(Resources.get(this.Gem.sprite), this.Gem.x, this.Gem.y);
+
+
     }
 }
 
