@@ -96,12 +96,20 @@ class Player {
     // TODO: hide unhide player animation when player resets after collision.
 
     // Check if player collides with enemy. If so, return true.
-    checkCollisions(enemy) {
+    enemyCollisions(enemy) {
         return (this.x < enemy.x + 70 &&
             this.x + 70 > enemy.x &&
             this.y < enemy.y + 50 &&
             50 + this.y > enemy.y);
     }
+    // Check if player collides with collectibles
+    collectibleCollisions(item) {
+        return (this.x < item.x + 70 &&
+            this.x + 70 > item.x &&
+            this.y < item.y + 50 &&
+            50 + this.y > item.y);
+    }
+
     // Resets Player
     reset() {
         this.x = 200;
@@ -133,8 +141,14 @@ class Player {
             // TODO: game.resume(), change background image.
         }
         allEnemies.forEach(enemy => {
-            if (this.checkCollisions(enemy)) {
+            if (this.enemyCollisions(enemy)) {
                 this.reset();
+            }
+        });
+        game.collectibles.forEach(item => {
+            if (this.collectibleCollisions(item)){
+                game.score = item.name === 'Gem' ? game.score++ : game.score;
+                game.lives = item.name === 'Heart' && game.lives <= game.MAX_LIVES ? game.lives++ : game.lives;
             }
         });
 
@@ -186,6 +200,7 @@ class GameUI {
         // spawn heart and gem randomly.
         // spawn gem every level. spawn heart rarely.
         this.Heart = {
+            name: 'Heart',
             sprite: 'images/Heart-mini.png',
             x: Math.floor(Math.random() * 5) * 101,
             y: (Math.floor(Math.random() * 3) + 1) * 83 - 10,
@@ -202,6 +217,7 @@ class GameUI {
             }
         };
         this.Gem = {
+            name: 'Gem',
             sprites: ['images/Gem Blue-mini.png', 'images/Gem Green-mini.png', 'images/Gem Orange-mini.png'],
             sprite: 'images/Gem Orange-mini.png',
             x: Math.floor(Math.random() * 5) * 101,
