@@ -291,12 +291,27 @@ class GameUI {
         this.no_of_enemies = 2;
         this.MAX_ENEMIES = 5;
         this.currentTopRowWater = true;
+        // player.hide(); // Implement This
+        allEnemies = this.getEnemies(this.no_of_enemies);
+        allEnemies.forEach(enemy => {
+            // enemy.hide(); // Implement This
+        });
+        this.collectibles.forEach(item => {
+            item.hide();
+        });
+
+        this.changeBackground(this.currentTopRowWater);
         player.reset();
         allEnemies.forEach(enemy => {
             enemy.reset();
         });
-        this.Heart.reset();
-        this.Gem.reset();
+        this.collectibles.forEach(item => {
+            if (Math.random() < item.probability) {
+                item.reset();
+            } else {
+                item.hide();
+            }
+        });
     }
 
     getEnemies(noOfEnemies) {
