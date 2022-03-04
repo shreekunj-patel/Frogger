@@ -508,7 +508,7 @@ const water_sprites = [
 const player = new Player();
 const game = new GameUI();
 
-const allEnemies = game.getEnemies(game.no_of_enemies);
+let allEnemies = game.getEnemies(game.no_of_enemies);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
