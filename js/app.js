@@ -147,8 +147,9 @@ class Player {
         });
         game.collectibles.forEach(item => {
             if (this.collectibleCollisions(item)){
-                game.score = item.name === 'Gem' ? game.score++ : game.score;
-                game.lives = item.name === 'Heart' && game.lives <= game.MAX_LIVES ? game.lives++ : game.lives;
+                item.hide();
+                game.score += item.name==='Gem' ? 1 : 0;
+                game.lives += item.name==='Heart' && game.lives<=game.MAX_LIVES ? 1 : 0;
             }
         });
 
