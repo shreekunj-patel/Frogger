@@ -144,7 +144,9 @@ class Player {
             if (this.enemyCollisions(enemy)) {
                 this.reset();
                 game.lives--; // decrease a life
-                if (game.lives === 0) game.reset(); // resets game if 0 lives left
+                if (game.lives === 0) {
+                    game.reset() // resets game if 0 lives left
+                };
             }
         });
         game.collectibles.forEach(item => {
@@ -324,8 +326,12 @@ class GameUI {
         // change background Images.
         this.changeBackground(this.currentTopRowWater);
         // this.changeBackground(this.currentTopRowWater); // Implement this. Given a boolean value, change top row to water abd bottom row to grass or vice versa.
-        // spawn collectibles after background change.
+        // spawn collectibles and enemies after background change and resume game.
         setTimeout(() => {
+            allEnemies.forEach(enemy => {
+                enemy.reset();
+                enemy.pauseSpeed();
+            });
             this.collectibles.forEach(item => {
                 if (Math.random() < item.probability) {
                     item.reset();
@@ -333,6 +339,7 @@ class GameUI {
                     item.hide();
                 }
             });
+            game.resume();
         }, 2150);
     }
 
@@ -342,33 +349,23 @@ class GameUI {
             this.pause();
         }
         const WATER = water_sprites[Math.floor(Math.random() * water_sprites.length)],
-            WATER_OLD = this.prevRowImages[0],
             GRASS = grass_sprites[Math.floor(Math.random() * grass_sprites.length)],
-            GRASS_OLD = this.prevRowImages[5],
-            STONE = stone_sprites[Math.floor(Math.random() * stone_sprites.length)],
-            STONE_OLD = this.prevRowImages[1];
+            STONE = stone_sprites[Math.floor(Math.random() * stone_sprites.length)];
 
         let rowImages1, rowImages2, rowImages3, rowImages4, rowImages5;
 
+        rowImages1 = [this.prevRowImages[0], this.prevRowImages[0], this.prevRowImages[1], this.prevRowImages[2], this.prevRowImages[3], this.prevRowImages[4]];
+        rowImages2 = [STONE, this.prevRowImages[0], this.prevRowImages[0], this.prevRowImages[1], this.prevRowImages[2], this.prevRowImages[3]];
+        rowImages3 = [STONE, STONE, this.prevRowImages[0], this.prevRowImages[0], this.prevRowImages[1], this.prevRowImages[2]];
+        rowImages4 = [STONE, STONE, STONE, this.prevRowImages[0], this.prevRowImages[0], this.prevRowImages[1]];
+        
         if (currentTopRowWater) {
-            rowImages1 = [WATER_OLD, WATER_OLD, STONE_OLD, STONE_OLD, STONE_OLD, GRASS_OLD];
-            rowImages2 = [STONE, WATER_OLD, WATER_OLD, STONE_OLD, STONE_OLD, STONE_OLD];
-            rowImages3 = [STONE, STONE, WATER_OLD, WATER_OLD, STONE_OLD, STONE_OLD];
-            rowImages4 = [STONE, STONE, STONE, WATER_OLD, WATER_OLD, STONE_OLD];
-            rowImages5 = [GRASS, STONE, STONE, STONE, WATER_OLD, WATER_OLD];
+            rowImages5 = [GRASS, STONE, STONE, STONE, this.prevRowImages[0], this.prevRowImages[0]];
         } else {
-            rowImages1 = [GRASS_OLD, GRASS_OLD, STONE_OLD, STONE_OLD, STONE_OLD, WATER_OLD];
-            rowImages2 = [STONE, GRASS_OLD, GRASS_OLD, STONE_OLD, STONE_OLD, STONE_OLD];
-            rowImages3 = [STONE, STONE, GRASS_OLD, GRASS_OLD, STONE_OLD, STONE_OLD];
-            rowImages4 = [STONE, STONE, STONE, GRASS_OLD, GRASS_OLD, STONE_OLD];
-            rowImages5 = [WATER, STONE, STONE, STONE, GRASS_OLD, GRASS_OLD];
+            rowImages5 = [WATER, STONE, STONE, STONE, this.prevRowImages[0], this.prevRowImages[0]];
         }
-
-        // for (row = 0; row < NO_ROWS; row++) {
-        //     for (col = 0; col< NO_COLS; col++) {
-        //         ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
-        //     }
-        // }
+        this.prevRowImages = rowImages5;
+        this.currentTopRowWater = !this.currentTopRowWater;
 
         const speed_Y = player.paused ? 83 : player.speed_Y;
 
@@ -386,7 +383,6 @@ class GameUI {
                     item.hide();
                 }
             });
-            console.log(player.y);
         }, 0);
         setTimeout(() => {
             this.rowImages = rowImages2;
@@ -401,7 +397,6 @@ class GameUI {
                     item.hide();
                 }
             });
-            console.log(player.y);
         }, 500);
         setTimeout(() => {
             this.rowImages = rowImages3;
@@ -416,7 +411,6 @@ class GameUI {
                     item.hide();
                 }
             });
-            console.log(player.y);
         }, 1000);
         setTimeout(() => {
             this.rowImages = rowImages4;
@@ -431,7 +425,6 @@ class GameUI {
                     item.hide();
                 }
             });
-            console.log(player.y);
         }, 1500);
         setTimeout(() => {
             this.rowImages = rowImages5;
@@ -446,13 +439,7 @@ class GameUI {
                     item.hide();
                 }
             });
-            console.log(player.y);
         }, 2000);
-
-        this.currentTopRowWater = !this.currentTopRowWater;
-        this.prevRowImages = this.rowImages;
-
-        // return rowImages; // this will be used in engine.js function render().
 
     }
 
