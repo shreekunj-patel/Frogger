@@ -315,7 +315,7 @@ class GameUI {
                 item.hide();
             }
         });
-        game.resume();
+        this.resume();
     }
 
     getEnemies(noOfEnemies) {
