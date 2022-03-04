@@ -281,7 +281,7 @@ class GameUI {
     // Game reset.
     // resets gameUI, player and enemies.
     reset() {
-        this.game.pause();
+        this.pause();
         this.status_start = true;
         this.status_win = false;
         this.status_lose = false;
