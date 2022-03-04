@@ -281,10 +281,11 @@ class GameUI {
     // Game reset.
     // resets gameUI, player and enemies.
     reset() {
+        this.game.pause();
         this.status_start = true;
         this.status_win = false;
         this.status_lose = false;
-        this.status_pause = false;
+        //this.status_pause = false;
         this.score = 0;
         this.lives = 3;
         this.level = 1;
@@ -302,8 +303,10 @@ class GameUI {
 
         this.changeBackground(this.currentTopRowWater);
         player.reset();
+        player.pauseSpeed();
         allEnemies.forEach(enemy => {
             enemy.reset();
+            enemy.pauseSpeed();
         });
         this.collectibles.forEach(item => {
             if (Math.random() < item.probability) {
@@ -312,6 +315,7 @@ class GameUI {
                 item.hide();
             }
         });
+        game.resume();
     }
 
     getEnemies(noOfEnemies) {
