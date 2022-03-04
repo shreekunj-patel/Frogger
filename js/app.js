@@ -143,6 +143,8 @@ class Player {
         allEnemies.forEach(enemy => {
             if (this.enemyCollisions(enemy)) {
                 this.reset();
+                game.lives--; // decrease a life
+                if (game.lives === 0) game.reset(); // resets game if 0 lives left
             }
         });
         game.collectibles.forEach(item => {
