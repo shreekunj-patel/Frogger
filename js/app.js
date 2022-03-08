@@ -27,7 +27,19 @@ class Enemy {
         this.changeSpeed(1);
 
     }
-    // TODO: switchRow(). // randomly change enemy's row and if another enemy is in the same row, change it's row before colliding with another enemy.
+    // switchRow(). // switch enemy's row.
+    // Parameter: enemy_array.
+    switchRow(enemy_array) {
+        let new_loc = this.location_Y;
+        enemy_array.forEach(enemy => {
+            // switch row for only first 3 enemies.
+            if (enemy.y === this.y && enemy_array.indexOf(enemy) < 4 && enemy.x !== this.x) {
+                let i = new_loc.indexOf(this.y);
+                new_loc.splice(i, 1);
+                this.y = new_loc[Math.floor(Math.random() * new_loc.length)];
+            }
+        });
+    }
 
     // changeSpeed().
     // changes enemy's speed according to speed multiplier.
@@ -94,6 +106,7 @@ class Enemy {
         // and also update it's speed randomly. Basically, reset the enemy.
         if (this.x > 505) {
             this.reset();
+            this.switchRow(allEnemies);
             this.sprite = this.changeSprite();
             this.changeSpeed(1);
         }
