@@ -15,6 +15,8 @@ class Enemy {
         // Randomly set the enemy's starting position from the array above.
         this.x = 0;
         this.y = 0;
+        this.prev_x = this.x;
+        this.prev_y = this.y;
 
         // Set the speed of the enemy. The speed is a random number between 100 and 700.
         this.speed = 0;
@@ -23,10 +25,31 @@ class Enemy {
         this.reset();
 
     }
-    // TODO: hide() unhide(). // hide and unhide enemy.
-    // TODO: changeSprite(). // use different sprite for different enemies.
     // TODO: changeSpeed(). // changes enemy's speed when level is changed and this.sprite"*-mini.png" is used.
     // TODO: switchRow(). // randomly change enemy's row and if another enemy is in the same row, change it's row before colliding with another enemy.
+
+    // hide() unhide(). // hide and unhide enemy.
+    hide(){
+        // set current enemy's position to previous position.
+        this.prev_x = this.x;
+        this.prev_y = this.y;
+        // hide enemy
+        this.x = -101;
+        this.y = -101;
+        // pause enemy's movement.
+        this.pauseSpeed();
+    }
+    unhide(){
+        // unhide enemy
+        this.x = this.prev_x;
+        this.y = this.prev_y;
+        this.resumeSpeed();
+    }
+
+    // changeSprite(). // use different sprite for different enemies.
+    changeSprite() {
+        return enemy_sprites[Math.floor(Math.random() * enemy_sprites.length)];
+    }
 
     // Reset enemy's position and speed.
     reset() {
@@ -58,6 +81,7 @@ class Enemy {
         if (this.x > 505) {
             this.x = this.location_X[Math.floor(Math.random() * this.location_X.length)];
             this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
+            this.sprite = this.changeSprite();
             this.resumeSpeed();
         }
 
@@ -145,8 +169,8 @@ class Player {
                 this.reset();
                 game.lives--; // decrease a life
                 if (game.lives === 0) {
-                    game.reset() // resets game if 0 lives left
-                };
+                    game.reset(); // resets game if 0 lives left
+                }
             }
         });
         game.collectibles.forEach(item => {
@@ -377,7 +401,7 @@ class GameUI {
         rowImages2 = [STONE, this.prevRowImages[0], this.prevRowImages[0], this.prevRowImages[1], this.prevRowImages[2], this.prevRowImages[3]];
         rowImages3 = [STONE, STONE, this.prevRowImages[0], this.prevRowImages[0], this.prevRowImages[1], this.prevRowImages[2]];
         rowImages4 = [STONE, STONE, STONE, this.prevRowImages[0], this.prevRowImages[0], this.prevRowImages[1]];
-        
+
         if (currentTopRowWater) {
             rowImages5 = [GRASS, STONE, STONE, STONE, this.prevRowImages[0], this.prevRowImages[0]];
         } else {
@@ -483,7 +507,7 @@ class GameUI {
     }
 }
 
-// Constants for background images
+// Constants for background images, collectibles, enemies, and player.
 const water_sprites = [
         'images/water-block.png',
         'images/water-block-2.png',
@@ -503,6 +527,30 @@ const water_sprites = [
         'images/stone-block.png',
         'images/stone-block-2.png',
         'images/stone-block-4.png',
+    ],
+    enemy_sprites = [
+        'images/enemy-bug.png',
+        'images/enemy-bug-2.png',
+        'images/enemy-bug-3.png',
+        'images/enemy-bug-4.png',
+        'images/enemy-bug-5.png',
+        'images/enemy-bug-6.png',
+        'images/enemy-bug-7.png',
+        'images/enemy-bug-8.png',
+        'images/enemy-bug-9.png',
+        'images/enemy-bug-10.png',
+        'images/enemy-bug-11.png',
+        'images/enemy-bug mini.png',
+    ],
+    enemy_mini_sprites = [
+        'images/enemy-bug mini.png',
+    ],
+    player_sprites = [
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
     ];
 
 
