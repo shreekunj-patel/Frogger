@@ -20,21 +20,24 @@ class Enemy {
 
         // Set the speed of the enemy. The speed is a random number between 100 and 700.
         this.speed = 0;
+        this.prev_speed = this.speed;
 
         // initialize the enemy's position
         this.reset();
+        this.changeSpeed(1);
 
     }
     // TODO: switchRow(). // randomly change enemy's row and if another enemy is in the same row, change it's row before colliding with another enemy.
 
     // changeSpeed().
     // changes enemy's speed according to speed multiplier.
-    // and if this.sprite contains "mini.png" then change its speed to 1200.
+    // and if this.sprite contains "mini.png" then change its speed to 1150.
     // Parameter: speed_multiplier.
     changeSpeed(speed_multiplier) {
+        this.prev_speed = this.speed;
         const speed = Math.floor(Math.random() * (700 - 100) + 100) * speed_multiplier;
         this.speed = speed > 1000 ? 1000 : speed;
-        this.speed = this.sprite.includes("mini.png") ? 1200 : this.speed;
+        this.speed = this.sprite.includes("mini.png") ? 1150 : this.speed;
     }
 
     // hide() unhide(). // hide and unhide enemy.
@@ -69,11 +72,13 @@ class Enemy {
     }
     // Pause enemy's movement.
     pauseSpeed() {
+        // set previous speed to current speed.
+        this.prev_speed = this.speed;
         this.speed = 0;
     }
     // Resume enemy's movement.
     resumeSpeed() {
-        this.speed = Math.floor(Math.random() * 700) + 100;
+        this.speed = this.prev_speed;
     }
 
 
