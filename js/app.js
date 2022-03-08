@@ -21,10 +21,10 @@ class Enemy {
         // Set the speed of the enemy. The speed is a random number between 100 and 700.
         this.speed = 0;
         this.prev_speed = this.speed;
+        this.speedMultiplier = 1;
 
-        // initialize the enemy's position
+        // initialize the enemy's position, speed and sprite.
         this.reset();
-        this.changeSpeed(1);
 
     }
     // switchRow(). // switch enemy's row.
@@ -79,7 +79,8 @@ class Enemy {
     reset() {
         this.x = this.location_X[Math.floor(Math.random() * this.location_X.length)];
         this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
-        this.resumeSpeed();
+        this.changeSpeed(this.speedMultiplier);
+        this.sprite = this.changeSprite();
 
     }
     // Pause enemy's movement.
@@ -107,8 +108,6 @@ class Enemy {
         if (this.x > 505) {
             this.reset();
             this.switchRow(allEnemies);
-            this.sprite = this.changeSprite();
-            this.changeSpeed(1);
         }
 
     }
