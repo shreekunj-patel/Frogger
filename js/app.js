@@ -213,7 +213,8 @@ class Player {
             if (this.collectibleCollisions(item)){
                 item.hide();
                 game.score += item.name==='Gem' ? 1 : 0;
-                game.lives += item.name==='Heart' && game.lives<=game.MAX_LIVES ? 1 : 0;
+                game.lives += item.name==='Heart' ? 1 : 0;
+                game.lives = game.lives > game.MAX_LIVES ? game.MAX_LIVES : game.lives;
             }
         });
 
