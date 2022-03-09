@@ -21,7 +21,7 @@ class Enemy {
         // Set the speed of the enemy. The speed is a random number between 100 and 700.
         this.speed = 0;
         this.prev_speed = this.speed;
-        this.speedMultiplier = 1;
+        this.speedMultiplier = 7;
 
         // initialize the enemy's position, speed and sprite.
         this.reset();
@@ -43,13 +43,19 @@ class Enemy {
 
     // changeSpeed().
     // changes enemy's speed according to speed multiplier.
-    // and if this.sprite contains "mini.png" then change its speed to 1150.
+    // and if this.sprite contains "mini.png" then change its speed to 1200.
     // Parameter: speed_multiplier.
     changeSpeed(speed_multiplier) {
         this.prev_speed = this.speed;
-        const speed = Math.floor(Math.random() * (700 - 100) + 100) * speed_multiplier;
-        this.speed = speed > 1000 ? 1000 : speed;
-        this.speed = this.sprite.includes("mini.png") ? 1150 : this.speed;
+        // console.log(this.sprite);
+        if(this.sprite.includes("mini.png")){
+            this.speed = 1200;
+        } else if (this.sprite.includes("giant.png")){
+            this.speed = 100;
+        } else {
+            const speed = Math.floor(Math.random() * (100 * speed_multiplier) + 100);
+            this.speed = speed > 1000 ? 1000 : speed;
+        }
     }
 
     // hide() unhide(). // hide and unhide enemy.
@@ -79,8 +85,8 @@ class Enemy {
     reset() {
         this.x = this.location_X[Math.floor(Math.random() * this.location_X.length)];
         this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
-        this.changeSpeed(this.speedMultiplier);
         this.sprite = this.changeSprite();
+        this.changeSpeed(this.speedMultiplier);
 
     }
     // Pause enemy's movement.
@@ -108,6 +114,11 @@ class Enemy {
         if (this.x > 505) {
             this.reset();
             this.switchRow(allEnemies);
+        }
+
+        // ambulance effect for mini enemies.
+        if (this.sprite.includes("mini.png")) {
+            this.sprite = enemy_mini_sprites[Math.floor(Math.random() * enemy_mini_sprites.length)];
         }
 
     }
@@ -566,9 +577,19 @@ const water_sprites = [
         'images/enemy-bug-10.png',
         'images/enemy-bug-11.png',
         'images/enemy-bug mini.png',
+        'images/enemy-bug giant.png',
     ],
     enemy_mini_sprites = [
         'images/enemy-bug mini.png',
+        'images/enemy-bug-2 mini.png',
+        'images/enemy-bug-3 mini.png',
+        'images/enemy-bug-4 mini.png',
+        'images/enemy-bug-5 mini.png',
+        'images/enemy-bug-6 mini.png',
+        'images/enemy-bug-7 mini.png',
+        'images/enemy-bug-9 mini.png',
+        'images/enemy-bug-10 mini.png',
+        'images/enemy-bug-11 mini.png',
     ],
     player_sprites = [
         'images/char-boy.png',
