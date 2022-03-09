@@ -362,7 +362,15 @@ class GameUI {
             item.hide();
         });
 
-        this.changeBackground(this.currentTopRowWater);
+        // this.changeBackground(this.currentTopRowWater);
+        this.rowImages = [
+            'images/water-block.png', // Top row is water
+            'images/stone-block.png', // Row 1 of 3 of stone
+            'images/stone-block.png', // Row 2 of 3 of stone
+            'images/stone-block.png', // Row 3 of 3 of stone
+            'images/grass-block.png', // Row 1 of 2 of grass
+            'images/grass-block.png' // Row 2 of 2 of grass
+        ];
         player.reset();
         player.pauseSpeed();
         allEnemies.forEach(enemy => {
