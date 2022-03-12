@@ -48,9 +48,9 @@ class Enemy {
     changeSpeed(speed_multiplier) {
         this.prev_speed = this.speed;
         // console.log(this.sprite);
-        if(this.sprite.includes("mini.png")){
+        if (this.sprite.includes("mini.png")) {
             this.speed = 1200;
-        } else if (this.sprite.includes("giant.png")){
+        } else if (this.sprite.includes("giant.png")) {
             this.speed = 100;
         } else {
             const speed = Math.floor(Math.random() * (100 * speed_multiplier) + 100);
@@ -59,7 +59,7 @@ class Enemy {
     }
 
     // hide() unhide(). // hide and unhide enemy.
-    hide(){
+    hide() {
         // set current enemy's position to previous position.
         this.prev_x = this.x;
         this.prev_y = this.y;
@@ -69,7 +69,7 @@ class Enemy {
         // pause enemy's movement.
         this.pauseSpeed();
     }
-    unhide(){
+    unhide() {
         // unhide enemy
         this.x = this.prev_x;
         this.y = this.prev_y;
@@ -210,10 +210,10 @@ class Player {
             }
         });
         game.collectibles.forEach(item => {
-            if (this.collectibleCollisions(item)){
+            if (this.collectibleCollisions(item)) {
                 item.hide();
-                game.score += item.name==='Gem' ? 1 : 0;
-                game.lives += item.name==='Heart' ? 1 : 0;
+                game.score += item.name === 'Gem' ? 1 : 0;
+                game.lives += item.name === 'Heart' ? 1 : 0;
                 game.lives = game.lives > game.MAX_LIVES ? game.MAX_LIVES : game.lives;
             }
         });
@@ -308,7 +308,7 @@ class GameUI {
             'images/grass-block.png', // Row 1 of 2 of grass
             'images/grass-block.png' // Row 2 of 2 of grass
         ];
-        // previouse row images.
+        // previous row images.
         this.prevRowImages = this.rowImages;
     }
     // DONE: changeBackground(). // change background sprite for different levels.
@@ -531,8 +531,7 @@ class GameUI {
 
     }
 
-    update() {
-    }
+    update() { }
 
     render() {
         ctx.font = '20px sans-serif';
@@ -554,10 +553,10 @@ class GameUI {
 
 // Constants for background images, collectibles, enemies, and player.
 const water_sprites = [
-        'images/water-block.png',
-        'images/water-block-2.png',
-        'images/water-block-3.png'
-    ],
+    'images/water-block.png',
+    'images/water-block-2.png',
+    'images/water-block-3.png'
+],
     grass_sprites = [
         'images/grass-block.png',
         'images/grass-block-2.png',
