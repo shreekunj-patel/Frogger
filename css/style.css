@@ -165,6 +165,11 @@ ul.game-stats li{
     cursor: pointer;
 }
 
+.modal-footer-tips code {
+    font-size: 1em;
+    font-weight: bold;
+}
+
 .modal-footer-tips:hover {
     color: #424242;
     font-weight: bold;
@@ -242,4 +247,10 @@ tr:hover {
 
 .action {
     text-align: start;
+}
+
+code {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #424242;
 }
