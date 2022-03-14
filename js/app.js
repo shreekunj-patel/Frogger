@@ -310,6 +310,8 @@ class GameUI {
         ];
         // previous row images.
         this.prevRowImages = this.rowImages;
+        // initialize modal
+        this.modal = new Modal('welcome', player.sprite, this.rowImages);
     }
     // DONE: changeBackground(). // change background sprite for different levels.
     // NOT NEEDED: animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
@@ -548,6 +550,308 @@ class GameUI {
         ctx.drawImage(Resources.get(this.Gem.sprite), this.Gem.x, this.Gem.y);
 
 
+    }
+}
+
+// game modal
+class Modal {
+    constructor(type, sprite=null, rowImages=null) {
+        this.type = type;
+        this.sprite = sprite ? sprite : player_sprites[0];
+        this.rowImages = rowImages ? rowImages : grass_sprites;
+        this.tips = [
+            "Want to move Diagonally? Try using UP(W) and RIGHT(D) keys at the same time.",
+            "You can change your character anytime by pressing space bar.",
+            "Collect the heart to gain a life.",
+            "You can have a maximum of 5 lives.",
+            "Make sure you don't hit the bugs, it will cost you a life.",
+            "If you run out of lives, the game is over.",
+            "Collect the Gem to increase your score.",
+            "You can click on this message to see next tip.",
+        ];
+        this.controls = `
+            <table>
+                <h3> Game Controls</h3>
+                <tr>
+                    <th>Action</th>
+                    <th>Key</th>
+                    <th>Optional Key</th>
+                </tr>
+                <tr>
+                    <td class="action">Move Left</td>
+                    <td class="key">&#129044;</td>
+                    <td class="key">A</td>
+                </tr>
+                <tr>
+                    <td class="action">Move Right</td>
+                    <td class="key">&#129046;</td>
+                    <td class="key">D</td>
+                </tr>
+                <tr>
+                    <td class="action">Move Up</td>
+                    <td class="key">&#129045;</td>
+                    <td class="key">W</td>
+                </tr>
+                <tr>
+                    <td class="action">Move Down</td>
+                    <td class="key">&#129047;</td>
+                    <td class="key">S</td>
+                </tr>
+                <tr>
+                    <td class="action">Pause</td>
+                    <td class="key">Space</td>
+                    <td class="key">Esc</td>
+                </tr>
+                <tr>
+                    <td class="action">Resume</td>
+                    <td class="key">Space</td>
+                    <td class="key">Esc</td>
+                </tr>
+                <tr>
+                    <td class="action">Restart</td>
+                    <td class="key">R</td>
+                    <td class="key">Ctrl + Esc</td>
+                </tr>
+            </table>
+        `;
+        // overlay
+        this.overlay = document.createElement('div');
+        this.overlay.className = 'modal-overlay';
+        this.overlay.style.display = 'none';
+        // overlay > content
+        this.content = document.createElement('div');
+        this.content.className = 'modal-content';
+        // content > header
+        this.header = document.createElement('header');
+        this.header.className = 'modal-header';
+        // header > title
+        this.title = document.createElement('h2');
+        this.title.className = 'modal-title';
+        // header > close button
+        this.close = document.createElement('button');
+        this.close.className = 'modal-close btn btn-small';
+        this.close.innerHTML = '&times;';
+        // content > body
+        this.body = document.createElement('div');
+        this.body.className = 'modal-body';
+        // body > character div
+        this.character = document.createElement('div');
+        this.character.className = 'modal-character';
+        // character > character image
+        this.characterImage = document.createElement('img');
+        this.characterImage.className = 'modal-character-image';
+        this.characterImage.src = this.sprite;
+        this.characterImage.alt = 'character';
+        let bgImage = document.createElement('img');
+        bgImage.className = 'modal-character-image bg-image';
+        bgImage.src = this.rowImages[this.rowImages.length - 1];
+        bgImage.alt = 'character background';
+        bgImage.style.marginTop = '30px';
+        // character > left arrow
+        this.leftArrow = document.createElement('button');
+        this.leftArrow.className = 'character-left-arrow btn btn-small';
+        this.leftArrow.innerHTML = '&#11164;';
+        this.leftArrow.onclick = this.prevSprite.bind(this);
+        // character > right arrow
+        this.rightArrow = document.createElement('button');
+        this.rightArrow.className = 'character-right-arrow btn btn-small';
+        this.rightArrow.innerHTML = '&#11166;';
+        this.rightArrow.onclick = this.nextSprite.bind(this);
+        // body > text div
+        this.text = document.createElement('div');
+        this.text.className = 'modal-text';
+        // content > footer
+        this.footer = document.createElement('footer');
+        this.footer.className = 'modal-footer';
+        // footer > hints text
+        this.hintText = document.createElement('span');
+        this.hintText.className = 'modal-footer-tips';
+        this.hintText.innerHTML = this.tips[Math.floor(Math.random() * this.tips.length)];
+        this.hintText.addEventListener('click', this.nextTip.bind(this));
+        // footer > buttons
+        this.buttons = document.createElement('div');
+        this.buttons.className = 'modal-buttons';
+        // buttons > restart button
+        this.restartButton = document.createElement('button');
+        this.restartButton.className = 'modal-restart-btn btn';
+        this.restartButton.innerHTML = 'Restart Game';
+        this.restartButton.style.display = 'none';
+        // buttons > resume button
+        this.resumeButton = document.createElement('button');
+        this.resumeButton.className = 'modal-resume-btn btn';
+        this.resumeButton.innerHTML = 'Resume';
+        this.resumeButton.style.display = 'none';
+        // footer > text
+        this.footerText = document.createElement('p');
+        this.footerText.className = 'modal-footer-text';
+        this.footerText.innerHTML = 'Made with &hearts; by <a href="https://github.com/shreekunj-patel">Shreekunj Patel</a>';
+
+        // append elements
+        this.header.appendChild(this.title);
+        this.header.appendChild(this.close);
+        this.character.appendChild(bgImage);
+        this.character.appendChild(this.characterImage);
+        this.character.appendChild(this.leftArrow);
+        this.character.appendChild(this.rightArrow);
+        this.body.appendChild(this.character);
+        this.body.appendChild(this.text);
+        this.buttons.appendChild(this.restartButton);
+        this.buttons.appendChild(this.resumeButton);
+        this.footer.appendChild(this.hintText);
+        this.footer.appendChild(this.buttons);
+        this.footer.appendChild(this.footerText);
+        this.content.appendChild(this.header);
+        this.content.appendChild(this.body);
+        this.content.appendChild(this.footer);
+        this.overlay.appendChild(this.content);
+        document.body.appendChild(this.overlay);
+
+        this.style();
+    }
+    // style modal
+    style() {
+        // TODO: style modal
+    }
+    // restart game
+    restart() {
+        this.hide();
+        game.reset();
+    }
+    // resume game
+    resume() {
+        this.hide();
+        game.resume();
+    }
+    // type: game-over, pause, welcome
+    typePause(){
+        // set title
+        this.title.innerHTML = 'Game Paused';
+        // set text
+        this.text.innerHTML = `
+            <ul class="game-stats"><span>Game Stats:</span>
+                <li>Score: <span>${game.score}</span></li>
+                <li>Level: <span>${game.level}</span></li>
+                <li>Lives: <span>${game.lives}</span></li>
+            </ul>
+            ${this.controls}
+        `;
+        // set buttons
+        this.restartButton.style.display = 'inline-block';
+        this.restartButton.innerHTML = 'Restart Game';
+        this.resumeButton.style.display = 'inline-block';
+        this.resumeButton.innerHTML = 'Continue';
+
+        // onclick events
+        this.restartButton.onclick = this.restart.bind(this);
+        this.resumeButton.onclick = this.resume.bind(this);
+    }
+    typeGameOver(){
+        // set title
+        this.title.innerHTML = 'Game Over';
+        // set text
+        this.text.innerHTML = `
+            <ul class="game-stats"> Final Stats:
+                <li>Score: <span>${game.score}</span></li>
+                <li>Level: <span>${game.level}</span></li>
+            </ul>
+            ${this.controls}
+
+        `;
+        // set buttons
+        this.restartButton.style.display = 'inline-block';
+        this.restartButton.innerHTML = 'Play Again';
+        this.resumeButton.style.display = 'none';
+        // onclick events
+        this.restartButton.onclick = this.restart.bind(this);
+    }
+    typeWelcome(){
+        // set title
+        this.title.innerHTML = 'Frogger Game';
+        // set text
+        this.text.innerHTML = `
+            <ul>Welcome
+                <li>Start By Selecting Your Character</li>
+                <li>Then Click on the Play Button to Start the Game</li>
+                <li>All you have to do is cross the road without getting hit by the bugs</li>
+                <li>Have Fun!</li>
+            </ul>
+            ${this.controls}
+        `;
+        // set buttons
+        this.restartButton.style.display = 'inline-block';
+        this.restartButton.innerHTML = 'Play';
+        this.resumeButton.style.display = 'none';
+        // onclick events
+        this.restartButton.onclick = this.restart.bind(this);
+    }
+    // check type
+    checkType() {
+        switch (this.type) {
+            case 'game-over':
+                this.close.onclick = this.restart.bind(this);
+                this.typeGameOver();
+                break;
+            case 'pause':
+                this.close.onclick = this.resume.bind(this);
+                this.typePause();
+                break;
+            case 'welcome':
+                this.close.onclick = this.restart.bind(this);
+                this.typeWelcome();
+                break;
+        }
+    }
+    show() {
+        this.checkType();
+        this.overlay.style.display = 'block';
+    }
+
+    hide() {
+        this.overlay.style.display = 'none';
+    }
+
+    setText(text) {
+        this.text.innerHTML = text;
+    }
+
+    // if left arrow is clicked or left or up key is pressed
+    prevSprite() {
+        let index = player_sprites.indexOf(this.sprite);
+        index--;
+        index = index < 0 ? player_sprites.length - 1 : index;
+        this.sprite = player_sprites[index];
+        this.characterImage.src = this.sprite;
+        player.sprite = this.sprite;
+    }
+
+    // if right arrow is clicked or right or down key is pressed
+    nextSprite() {
+        let index = player_sprites.indexOf(this.sprite);
+        index++;
+        index = index > player_sprites.length - 1 ? 0 : index;
+        this.sprite = player_sprites[index];
+        this.characterImage.src = this.sprite;
+        player.sprite = this.sprite;
+    }
+
+    nextTip() {
+        let index = this.tips.indexOf(this.tip);
+        index++;
+        index = index > this.tips.length - 1 ? 0 : index;
+        this.tip = this.tips[index];
+        this.hintText.innerHTML = this.tip;
+    }
+
+    // keyup event handler
+    // if key is Esc, close modal
+    keyUpHandler(e) {
+        if (e.keyCode == 37 || e.keyCode == 38) {
+            this.leftArrowClicked();
+        } else if (e.keyCode == 39 || e.keyCode == 40) {
+            this.rightArrowClicked();
+        } else if (e.keyCode == 27) {
+            this.hide();
+        }
     }
 }
 
