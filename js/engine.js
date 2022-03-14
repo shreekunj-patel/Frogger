@@ -155,6 +155,8 @@ var Engine = (function (global) {
      */
     function reset() {
         // noop
+        game.pause();
+        game.modal.show();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -201,6 +203,10 @@ var Engine = (function (global) {
         'images/enemy-bug-10.png',
         'images/enemy-bug-11.png',
         'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
         'images/Heart-mini.png',
         'images/Gem Blue-mini.png',
         'images/Gem Green-mini.png',
