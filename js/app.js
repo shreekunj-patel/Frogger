@@ -204,8 +204,9 @@ class Player {
             if (this.enemyCollisions(enemy)) {
                 this.reset();
                 game.lives--; // decrease a life
-                if (game.lives === 0) {
-                    game.reset(); // resets game if 0 lives left
+                if (game.lives <= 0) {
+                    game.modal.type = 'game-over'; // resets game if 0 lives left
+                    game.modal.show();
                 }
             }
         });
@@ -226,17 +227,53 @@ class Player {
 
     // Handle input from the user.
     handleInput(key) {
-        if (key === 'left' && this.x > 0) {
+        if (key === 'left') {
+            if (this.x > 0) {
             this.x -= this.speed_X;
+            }
+            if(!game.modal.isHidden) {
+                game.modal.prevSprite();
+            }
         }
-        if (key === 'right' && this.x < 400) {
+        if (key === 'right') {
+            if (this.x < 400) {
             this.x += this.speed_X;
+            }
+            if (!game.modal.isHidden) {
+                game.modal.nextSprite();
+            }
         }
-        if (key === 'up' && this.y > 0) {
+        if (key === 'up') {
+            if (this.y > 0) {
             this.y -= this.speed_Y;
+            }
+            if (!game.modal.isHidden) {
+                game.modal.prevSprite();
+            }
         }
-        if (key === 'down' && this.y < 400) {
+        if (key === 'down') {
+            if (this.y < 400) {
             this.y += this.speed_Y;
+            }
+            if (!game.modal.isHidden) {
+                game.modal.nextSprite();
+            }
+        }
+        if (key === 'pause') {
+            if(game.modal.isHidden){
+                game.pause();
+                game.modal.type = 'pause';
+                game.modal.show();
+            } else if (game.modal.type === 'game-over') {
+
+                game.modal.restart();
+            } else {
+                game.modal.resume();
+            }
+        }
+        if (key === 'restart') {
+            game.modal.type = 'restart';
+            game.modal.show();
         }
     }
 }
@@ -560,8 +597,9 @@ class Modal {
         this.sprite = sprite ? sprite : player_sprites[0];
         this.rowImages = rowImages ? rowImages : grass_sprites;
         this.tips = [
-            "Want to move Diagonally? Try using UP(W) and RIGHT(D) keys at the same time.",
-            "You can change your character anytime by pressing space bar.",
+            "Want to move Diagonally? Try using <code>UP</code>(<code>W</code>) and <code>RIGHT</code>(<code>D</code>) keys at the same time.",
+            "Need a quick break? Just hit the <code>SPACEBAR</code> or <code>Esc</code> to pause the game.",
+            "Quickly change character with <code>arrow keys</code> while paused.",
             "Collect the heart to gain a life.",
             "You can have a maximum of 5 lives.",
             "Make sure you don't hit the bugs, it will cost you a life.",
@@ -578,39 +616,39 @@ class Modal {
                     <th>Optional Key</th>
                 </tr>
                 <tr>
-                    <td class="action">Move Left</td>
-                    <td class="key">&#129044;</td>
-                    <td class="key">A</td>
+                    <td class="action"><code>Move Left</code></td>
+                    <td class="key"><code>&#129044;</code></td>
+                    <td class="key"><code>A</code></td>
                 </tr>
                 <tr>
-                    <td class="action">Move Right</td>
-                    <td class="key">&#129046;</td>
-                    <td class="key">D</td>
+                    <td class="action"><code>Move Right</code></td>
+                    <td class="key"><code>&#129046;</code></td>
+                    <td class="key"><code>D</code></td>
                 </tr>
                 <tr>
-                    <td class="action">Move Up</td>
-                    <td class="key">&#129045;</td>
-                    <td class="key">W</td>
+                    <td class="action"><code>Move Up</code></td>
+                    <td class="key"><code>&#129045;</code></td>
+                    <td class="key"><code>W</code></td>
                 </tr>
                 <tr>
-                    <td class="action">Move Down</td>
-                    <td class="key">&#129047;</td>
-                    <td class="key">S</td>
+                    <td class="action"><code>Move Down</code></td>
+                    <td class="key"><code>&#129047;</code></td>
+                    <td class="key"><code>S</code></td>
                 </tr>
                 <tr>
-                    <td class="action">Pause</td>
-                    <td class="key">Space</td>
-                    <td class="key">Esc</td>
+                    <td class="action"><code>Pause</code></td>
+                    <td class="key"><code>SPACEBAR</code></td>
+                    <td class="key"><code>Esc</code></td>
                 </tr>
                 <tr>
-                    <td class="action">Resume</td>
-                    <td class="key">Space</td>
-                    <td class="key">Esc</td>
+                    <td class="action"><code>Resume</code></td>
+                    <td class="key"><code>SPACEBAR</code></td>
+                    <td class="key"><code>Esc</code></td>
                 </tr>
                 <tr>
-                    <td class="action">Restart</td>
-                    <td class="key">R</td>
-                    <td class="key">Ctrl + Esc</td>
+                    <td class="action"><code>Restart</code></td>
+                    <td class="key"><code>R</code></td>
+                    <td class="key"><code> &nbsp;</code></td>
                 </tr>
             </table>
         `;
@@ -666,7 +704,7 @@ class Modal {
         // footer > hints text
         this.hintText = document.createElement('span');
         this.hintText.className = 'modal-footer-tips';
-        this.hintText.innerHTML = this.tips[Math.floor(Math.random() * this.tips.length)];
+        this.hintText.innerHTML = `Tip: ${this.tips[Math.floor(Math.random() * this.tips.length)]}`;
         this.hintText.addEventListener('click', this.nextTip.bind(this));
         // footer > buttons
         this.buttons = document.createElement('div');
@@ -707,6 +745,10 @@ class Modal {
         document.body.appendChild(this.overlay);
 
         this.style();
+    }
+    // get isHidden
+    get isHidden() {
+        return this.overlay.style.display === 'none';
     }
     // style modal
     style() {
@@ -784,6 +826,30 @@ class Modal {
         // onclick events
         this.restartButton.onclick = this.restart.bind(this);
     }
+    typeRestart(){
+        // set title
+        this.title.innerHTML = 'Restart Game?';
+        // set text
+        this.text.innerHTML = `
+            <h3>Are you sure you want to restart the game?</h3>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;Your current progress will be lost</p>
+            <ul class="game-stats">
+                <span>Game Stats:</span>
+                <li>Score: <span>${game.score}</span></li>
+                <li>Level: <span>${game.level}</span></li>
+                <li>Lives: <span>${game.lives}</span></li>
+            </ul>
+        `;
+        // set buttons
+        this.restartButton.style.display = 'inline-block';
+        this.restartButton.innerHTML = 'Yes';
+        this.resumeButton.style.display = 'inline-block';
+        this.resumeButton.innerHTML = 'No';
+        // onclick events
+        this.restartButton.onclick = this.restart.bind(this);
+        this.resumeButton.onclick = this.resume.bind(this);
+
+    }
     // check type
     checkType() {
         switch (this.type) {
@@ -798,6 +864,10 @@ class Modal {
             case 'welcome':
                 this.close.onclick = this.restart.bind(this);
                 this.typeWelcome();
+                break;
+            case 'restart':
+                this.close.onclick = this.resume.bind(this);
+                this.typeRestart();
                 break;
         }
     }
@@ -835,11 +905,12 @@ class Modal {
     }
 
     nextTip() {
-        let index = this.tips.indexOf(this.tip);
+        let tip = this.hintText.innerHTML.replace('Tip: ', '');
+        let index = this.tips.indexOf(tip);
         index++;
         index = index > this.tips.length - 1 ? 0 : index;
-        this.tip = this.tips[index];
-        this.hintText.innerHTML = this.tip;
+        tip = this.tips[index];
+        this.hintText.innerHTML = `Tip: ${tip}`;
     }
 
     // keyup event handler
@@ -924,10 +995,17 @@ let allEnemies = game.getEnemies(game.no_of_enemies);
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function (e) {
     var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
+        37: 'left', // left arrow
+        65: 'left', // A
+        38: 'up', // up arrow
+        87: 'up', // W
+        39: 'right', // right arrow
+        68: 'right', // D
+        40: 'down', // down arrow
+        83: 'down', // S
+        32: 'pause', // space
+        27: 'pause', // esc
+        82: 'restart', // R
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
