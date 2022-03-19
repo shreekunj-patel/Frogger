@@ -31,9 +31,9 @@ class Enemy {
     // Parameter: enemy_array.
     switchRow(enemy_array) {
         let new_loc = this.location_Y;
-        enemy_array.forEach(enemy => {
+        enemy_array.forEach((enemy,index) => {
             // switch row for only first 3 enemies.
-            if (enemy.y === this.y && enemy_array.indexOf(enemy) < 4 && enemy.x !== this.x) {
+            if (enemy.y === this.y && index < 4 && enemy.x !== this.x) {
                 let i = new_loc.indexOf(this.y);
                 new_loc.splice(i, 1);
                 this.y = new_loc[Math.floor(Math.random() * new_loc.length)];
@@ -990,6 +990,7 @@ const player = new Player();
 const game = new GameUI();
 
 let allEnemies = game.getEnemies(game.no_of_enemies);
+console.log(allEnemies);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
