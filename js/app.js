@@ -631,22 +631,22 @@ class Modal {
                 </tr>
                 <tr>
                     <td class="action"><code>Move Left</code></td>
-                    <td class="key"><code>&#129044;</code></td>
+                    <td class="key"><code>&#x25C0; (Left Arrow)</code></td>
                     <td class="key"><code>A</code></td>
                 </tr>
                 <tr>
                     <td class="action"><code>Move Right</code></td>
-                    <td class="key"><code>&#129046;</code></td>
+                    <td class="key"><code>&#x25B6; (Right Arrow)</code></td>
                     <td class="key"><code>D</code></td>
                 </tr>
                 <tr>
                     <td class="action"><code>Move Up</code></td>
-                    <td class="key"><code>&#129045;</code></td>
+                    <td class="key"><code>&#x25B2; (Up Arrow)</code></td>
                     <td class="key"><code>W</code></td>
                 </tr>
                 <tr>
                     <td class="action"><code>Move Down</code></td>
-                    <td class="key"><code>&#129047;</code></td>
+                    <td class="key"><code>&#x25BC; (Down Arrow)</code></td>
                     <td class="key"><code>S</code></td>
                 </tr>
                 <tr>
@@ -662,7 +662,7 @@ class Modal {
                 <tr>
                     <td class="action"><code>Restart</code></td>
                     <td class="key"><code>R</code></td>
-                    <td class="key"><code> &nbsp;</code></td>
+                    <td class="key"><code> &nbsp; </code></td>
                 </tr>
             </table>
         `;
@@ -689,6 +689,10 @@ class Modal {
         // body > character div
         this.character = document.createElement('div');
         this.character.className = 'modal-character';
+        // character > select character
+        let characterSelect = document.createElement('span');
+        characterSelect.className = 'modal-character-select';
+        characterSelect.innerHTML = 'Select Your Character';
         // character > character image
         this.characterImage = document.createElement('img');
         this.characterImage.className = 'modal-character-image';
@@ -702,12 +706,12 @@ class Modal {
         // character > left arrow
         this.leftArrow = document.createElement('button');
         this.leftArrow.className = 'character-left-arrow btn btn-small';
-        this.leftArrow.innerHTML = '&#11164;';
+        this.leftArrow.innerHTML = '&#x25C0;';
         this.leftArrow.onclick = this.prevSprite.bind(this);
         // character > right arrow
         this.rightArrow = document.createElement('button');
         this.rightArrow.className = 'character-right-arrow btn btn-small';
-        this.rightArrow.innerHTML = '&#11166;';
+        this.rightArrow.innerHTML = '&#x25B6;';
         this.rightArrow.onclick = this.nextSprite.bind(this);
         // body > text div
         this.text = document.createElement('div');
@@ -741,6 +745,7 @@ class Modal {
         // append elements
         this.header.appendChild(this.title);
         this.header.appendChild(this.close);
+        this.character.appendChild(characterSelect);
         this.character.appendChild(bgImage);
         this.character.appendChild(this.characterImage);
         this.character.appendChild(this.leftArrow);
