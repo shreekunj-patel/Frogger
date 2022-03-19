@@ -2,7 +2,68 @@ body {
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1.1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
 }
+
+
+.btn {
+    padding: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 7px;
+    border: none;
+    outline: none;
+    background-color: #e0e0e0;
+    color: #424242;
+    cursor: pointer;
+}
+
+.navigation-buttons {
+    display: grid;
+    grid-template-columns: 3fr repeat(5, 1fr) 3fr;
+    grid-template-rows: repeat(2, 1fr);
+    gap: 5px;
+}
+
+.navigation-buttons .btn-small {
+    width: 50px;
+    height: 50px;
+    border-radius: 7px;
+}
+
+.navigation-buttons .up {
+    grid-column: 4 / 4;
+    grid-row: 1 / 1;
+}
+
+.navigation-buttons .down {
+    grid-column: 4/ 4;
+    grid-row: 2 / 2;
+}
+
+.navigation-buttons .left {
+    grid-column: 3/ 3;
+    grid-row: 2/ 2;
+}
+
+.navigation-buttons .right {
+    grid-column: 5/ 5;
+    grid-row: 2/ 2;
+}
+
+.navigation-buttons .pause {
+    grid-column: 7 / 7;
+    grid-row: 1 / 2;
+}
+
+.navigation-buttons .restart {
+    grid-column: 1 / 1;
+    grid-row: 1 / 2;
+}
+
 
 .modal-overlay {
     position: fixed;
