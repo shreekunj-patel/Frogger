@@ -294,7 +294,6 @@ class GameUI {
         this.MAX_LIVES = 5;
         this.level = 1;
         // Set default no of enemies and MAX_ENEMIES.
-        this.no_of_enemies = 2;
         this.MAX_ENEMIES = 5;
         this.currentTopRowWater = true;
         // DONE: add Collectible Heart and Gem.
@@ -389,11 +388,10 @@ class GameUI {
         this.score = 0;
         this.lives = 3;
         this.level = 1;
-        this.no_of_enemies = 2;
         this.MAX_ENEMIES = 5;
         this.currentTopRowWater = true;
         // player.hide(); // Implement This
-        allEnemies = this.getEnemies(this.no_of_enemies);
+        allEnemies = this.getEnemies(this.currentEnemies());
         allEnemies.forEach(enemy => {
             // enemy.hide(); // Implement This
         });
@@ -426,9 +424,25 @@ class GameUI {
         this.resume();
     }
 
-    getEnemies(noOfEnemies) {
+    currentEnemies() {
+        let numOfEnemies = this.level - 1;
+        if (this.level <= 3) {
+            numOfEnemies = 1;
+        } else if (this.level <= 6) {
+            numOfEnemies = 2;
+        } else if (this.level <= 10) {
+            numOfEnemies = 3;
+        } else if (this.level <= 15) {
+            numOfEnemies = 4;
+        } else {
+            numOfEnemies = this.MAX_ENEMIES;
+        }
+        return numOfEnemies;
+    }
+
+    getEnemies(numOfEnemies) {
         const enemies = [];
-        for (let i = 0; i < noOfEnemies; i++) {
+        for (let i = 0; i < numOfEnemies; i++) {
             enemies.push(new Enemy());
         }
         return enemies;
@@ -455,6 +469,7 @@ class GameUI {
         // this.changeBackground(this.currentTopRowWater); // Implement this. Given a boolean value, change top row to water abd bottom row to grass or vice versa.
         // spawn collectibles and enemies after background change and resume game.
         setTimeout(() => {
+            allEnemies = this.getEnemies(this.currentEnemies());
             allEnemies.forEach(enemy => {
                 enemy.reset();
                 enemy.pauseSpeed();
