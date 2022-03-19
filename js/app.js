@@ -21,7 +21,8 @@ class Enemy {
         // Set the speed of the enemy. The speed is a random number between 100 and 700.
         this.speed = 0;
         this.prev_speed = this.speed;
-        this.speedMultiplier = 7;
+        this.speedMultiplier = game.level * 0.25;
+        this.speedMultiplier = this.speedMultiplier < 1 ? 1 : this.speedMultiplier;
 
         // initialize the enemy's position, speed and sprite.
         this.reset();
@@ -47,7 +48,6 @@ class Enemy {
     // Parameter: speed_multiplier.
     changeSpeed(speed_multiplier) {
         this.prev_speed = this.speed;
-        // console.log(this.sprite);
         if (this.sprite.includes("mini.png")) {
             this.speed = 1200;
         } else if (this.sprite.includes("giant.png")) {
@@ -87,7 +87,6 @@ class Enemy {
         this.y = this.location_Y[Math.floor(Math.random() * this.location_Y.length)];
         this.sprite = this.changeSprite();
         this.changeSpeed(this.speedMultiplier);
-
     }
     // Pause enemy's movement.
     pauseSpeed() {
@@ -1005,7 +1004,6 @@ const player = new Player();
 const game = new GameUI();
 
 let allEnemies = game.getEnemies(game.no_of_enemies);
-console.log(allEnemies);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
