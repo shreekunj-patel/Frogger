@@ -22,11 +22,68 @@ var Engine = (function (global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        // controls
+        navButtonsDiv = doc.createElement('div'),
         lastTime;
 
     canvas.width = 505;
     canvas.height = 606;
+
+    navButtonsDiv.className = "navigation-buttons";
+    navButtonsDiv.style.maxWidth = canvas.width + "px";
+    // up button
+    upButton = doc.createElement('button');
+    upButton.innerHTML = "&#x25B2;";
+    upButton.className = "btn btn-small up";
+    upButton.onclick = () => {
+        player.handleInput('up');
+    };
+    // down button
+    downButton = doc.createElement('button');
+    downButton.innerHTML = "&#x25BC;";
+    downButton.className = "btn btn-small down";
+    downButton.onclick = () => {
+        player.handleInput('down');
+    };
+    // left button
+    leftButton = doc.createElement('button');
+    leftButton.innerHTML = "&#x25C0;";
+    leftButton.className = "btn btn-small left";
+    leftButton.onclick = () => {
+        player.handleInput('left');
+    };
+    // right button
+    rightButton = doc.createElement('button');
+    rightButton.innerHTML = "&#x25B6;";
+    rightButton.className = "btn btn-small right";
+    rightButton.onclick = () => {
+        player.handleInput('right');
+    };
+    // pause button
+    pauseButton = doc.createElement('button');
+    pauseButton.innerHTML = "PAUSE";
+    pauseButton.style.borderRadius = "7px";
+    pauseButton.className = "btn pause";
+    pauseButton.onclick = () => {
+        player.handleInput('pause');
+    };
+    // restart button
+    restartButton = doc.createElement('button');
+    restartButton.innerHTML = "RESTART";
+    restartButton.className = "btn restart";
+    restartButton.onclick = () => {
+        player.handleInput('restart');
+    };
+    // add buttons to navigation buttons div
+    navButtonsDiv.appendChild(upButton);
+    navButtonsDiv.appendChild(downButton);
+    navButtonsDiv.appendChild(leftButton);
+    navButtonsDiv.appendChild(rightButton);
+    navButtonsDiv.appendChild(pauseButton);
+    navButtonsDiv.appendChild(restartButton);
+
     doc.body.appendChild(canvas);
+    doc.body.appendChild(navButtonsDiv);
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
