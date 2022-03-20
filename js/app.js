@@ -150,6 +150,10 @@ class Player {
         // reset player
         this.reset();
     }
+    // isPaused(). // check if player is paused.
+    isPaused() {
+        return this.paused;
+    }
     // get player's current row and column.
     getRow() {
         return Math.round(this.y / tileHeight());
@@ -238,7 +242,7 @@ class Player {
     // Handle input from the user.
     handleInput(key) {
         if (key === 'left') {
-            if (game.modal.isHidden) {
+            if (game.modal.isHidden && !this.isPaused()) {
                 if (this.x > 0) {
                 this.x -= this.speed_X;
                 }
@@ -247,7 +251,7 @@ class Player {
             }
         }
         if (key === 'right') {
-            if (game.modal.isHidden) {
+            if (game.modal.isHidden && !this.isPaused()) {
                 if (this.x < tileWidth() * 4) {
                 this.x += this.speed_X;
                 }
@@ -256,7 +260,7 @@ class Player {
             }
         }
         if (key === 'up') {
-            if (game.modal.isHidden) {
+            if (game.modal.isHidden && !this.isPaused()) {
                 if (this.y > 0) {
                 this.y -= this.speed_Y;
                 }
@@ -265,7 +269,7 @@ class Player {
             }
         }
         if (key === 'down') {
-            if (game.modal.isHidden) {
+            if (game.modal.isHidden && !this.isPaused()) {
                 if (this.y < (tileHeight() * 5) - Math.round(tileHeight() * 0.15)) {
                 this.y += this.speed_Y;
                 }
@@ -295,12 +299,6 @@ class Player {
 // this class is responsible for game score, lives and level.
 class GameUI {
     constructor() {
-        // Set default game statuses.
-        this.status_start = true;
-        this.status_win = false;
-        this.status_lose = false;
-        this.status_pause = false;
-
         // Set default values for game score, lives and level.
         this.score = 0;
         this.lives = 3;
@@ -371,8 +369,14 @@ class GameUI {
         ];
         // previous row images.
         this.prevRowImages = this.rowImages;
+        // animating
+        this.animating = false;
         // initialize modal
         this.modal = new Modal('welcome', player.sprite, this.rowImages);
+    }
+    // isAnimating()
+    isAnimating() {
+        return this.animating;
     }
     // DONE: changeBackground(). // change background sprite for different levels.
     // NOT NEEDED: animateBackground(). // if level is changed pause game and animate background. animation hint: background moves top to bottom.
@@ -385,7 +389,6 @@ class GameUI {
     // Game pause.
     // pauses gameUI, player and enemies.
     pause() {
-        this.status_pause = true;
         player.pauseSpeed();
         allEnemies.forEach(enemy => {
             enemy.pauseSpeed();
@@ -395,7 +398,6 @@ class GameUI {
     // Game resume.
     // resumes gameUI, player and enemies.
     resume() {
-        this.status_pause = false;
         player.resumeSpeed();
         allEnemies.forEach(enemy => {
             enemy.resumeSpeed();
@@ -406,10 +408,6 @@ class GameUI {
     // resets gameUI, player and enemies.
     reset() {
         this.pause();
-        this.status_start = true;
-        this.status_win = false;
-        this.status_lose = false;
-        //this.status_pause = false;
         this.score = 0;
         this.lives = 3;
         this.level = 1;
@@ -433,6 +431,8 @@ class GameUI {
             'images/grass-block.png', // Row 1 of 2 of grass
             'images/grass-block.png' // Row 2 of 2 of grass
         ];
+        this.prevRowImages = this.rowImages;
+        this.animating = false;
         player.reset();
         player.pauseSpeed();
         allEnemies.forEach(enemy => {
@@ -475,11 +475,9 @@ class GameUI {
 
     levelUp() {
         // Pause game if not paused.
-        if (!this.status_pause) {
+        if (!player.isPaused()) {
             this.pause();
         }
-        // change win_status to true.
-        this.status_win = true;
         // Increase level and score by 1.
         this.level++;
         this.score++;
@@ -506,13 +504,32 @@ class GameUI {
                     item.hide();
                 }
             });
-            game.resume();
+            this.animating = false;
+            this.resume();
         }, 2150);
+    }
+
+    moveWithBG(moveSpeed_Y) {
+        player.y += moveSpeed_Y;
+        allEnemies.forEach(enemy => {
+            enemy.y += moveSpeed_Y;
+            if (enemy.y > ((tileHeight() * 5) - Math.round(tileHeight() * 0.1807))) {
+                enemy.x = -101;
+            } else {
+                enemy.x = enemy.x;
+            }
+        });
+        this.collectibles.forEach(item => {
+            item.y += moveSpeed_Y;
+            if (item.y > (tileHeight() * 5) - Math.round(tileHeight() * 0.0602)) {
+                item.hide();
+            }
+        });
     }
 
     changeBackground(currentTopRowWater) {
         // pause game if not paused.
-        if (!this.status_pause) {
+        if (!player.isPaused()) {
             this.pause();
         }
         const WATER = water_sprites[Math.floor(Math.random() * water_sprites.length)],
@@ -534,78 +551,44 @@ class GameUI {
         this.prevRowImages = rowImages5;
         this.currentTopRowWater = !this.currentTopRowWater;
 
-        const speed_Y = player.paused ? 83 : player.speed_Y;
+        const speed_Y = tileHeight();
 
         setTimeout(() => {
+            this.animating = true;
+            if (!player.isPaused()){
+                player.pauseSpeed();
+            }
             this.rowImages = rowImages1;
             // move player down according to player's speed.
-            player.y += speed_Y;
-            allEnemies.forEach(enemy => {
-                enemy.y += speed_Y;
-                enemy.x = enemy.y > 400 ? -101 : enemy.x;
-            });
-            this.collectibles.forEach(item => {
-                item.y += speed_Y;
-                if (item.y > 410) {
-                    item.hide();
-                }
-            });
+            this.moveWithBG(speed_Y);
         }, 0);
         setTimeout(() => {
+            if (!player.isPaused()){
+                player.pauseSpeed();
+            }
             this.rowImages = rowImages2;
-            player.y += speed_Y;
-            allEnemies.forEach(enemy => {
-                enemy.y += speed_Y;
-                enemy.x = enemy.y > 400 ? -101 : enemy.x;
-            });
-            this.collectibles.forEach(item => {
-                item.y += speed_Y;
-                if (item.y > 410) {
-                    item.hide();
-                }
-            });
+            this.moveWithBG(speed_Y);
         }, 500);
         setTimeout(() => {
+            if (!player.isPaused()){
+                player.pauseSpeed();
+            }
             this.rowImages = rowImages3;
-            player.y += speed_Y;
-            allEnemies.forEach(enemy => {
-                enemy.y += speed_Y;
-                enemy.x = enemy.y > 400 ? -101 : enemy.x;
-            });
-            this.collectibles.forEach(item => {
-                item.y += speed_Y;
-                if (item.y > 410) {
-                    item.hide();
-                }
-            });
+            this.moveWithBG(speed_Y);
         }, 1000);
         setTimeout(() => {
+            if (!player.isPaused()){
+                player.pauseSpeed();
+            }
             this.rowImages = rowImages4;
-            player.y += speed_Y;
-            allEnemies.forEach(enemy => {
-                enemy.y += speed_Y;
-                enemy.x = enemy.y > 400 ? -101 : enemy.x;
-            });
-            this.collectibles.forEach(item => {
-                item.y += speed_Y;
-                if (item.y > 410) {
-                    item.hide();
-                }
-            });
+            this.moveWithBG(speed_Y);
         }, 1500);
         setTimeout(() => {
+            if (!player.isPaused()){
+                player.pauseSpeed();
+            }
             this.rowImages = rowImages5;
-            player.y += speed_Y;
-            allEnemies.forEach(enemy => {
-                enemy.y += speed_Y;
-                enemy.x = enemy.y > 400 ? -101 : enemy.x;
-            });
-            this.collectibles.forEach(item => {
-                item.y += speed_Y;
-                if (item.y > 410) {
-                    item.hide();
-                }
-            });
+            this.moveWithBG(speed_Y);
         }, 2000);
 
     }
@@ -619,11 +602,13 @@ class GameUI {
             player.speed_Y = tileHeight();
         }
         // update enemies
-        allEnemies.forEach(enemy => {
-            let index = enemy.location_Y.indexOf(enemy.y);
-            enemy.location_Y = [tileHeight() - Math.round(tileHeight() * 0.2410), (tileHeight() * 2) - Math.round(tileHeight() * 0.2410), (tileHeight() * 3) - Math.round(tileHeight() * 0.2410)];
-            enemy.y = enemy.location_Y[index];
-        });
+        if (!this.isAnimating()) {
+            allEnemies.forEach(enemy => {
+                let index = enemy.location_Y.indexOf(enemy.y);
+                enemy.location_Y = [tileHeight() - Math.round(tileHeight() * 0.2410), (tileHeight() * 2) - Math.round(tileHeight() * 0.2410), (tileHeight() * 3) - Math.round(tileHeight() * 0.2410)];
+                enemy.y = enemy.location_Y[index];
+            });
+        }
         // update collectibles
         this.collectibles.forEach(item => {
             if (item.x > 0 && item.y > 0) {
@@ -832,7 +817,9 @@ class Modal {
     // resume game
     resume() {
         this.hide();
-        game.resume();
+        if (!game.isAnimating()) {
+            game.resume();
+        }
     }
     // type: game-over, pause, welcome
     typePause(){
