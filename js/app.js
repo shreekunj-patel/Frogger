@@ -740,7 +740,7 @@ class Modal {
         // character > select character
         let characterSelect = document.createElement('span');
         characterSelect.className = 'modal-character-select';
-        characterSelect.innerHTML = 'Select Your Character';
+        characterSelect.innerHTML = 'Select Character';
         // character > character image
         this.characterImage = document.createElement('img');
         this.characterImage.className = 'modal-character-image';
