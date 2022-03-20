@@ -30,11 +30,13 @@ var Engine = (function (global) {
     // canvas.height = 606;
 
     // Making canvas responsive
-    canvas.width = win.innerWidth < 535 ? win.innerWidth-30 : 505;
+    canvas.width = win.innerWidth < 535 ? win.innerWidth - 30 : 505;
+    canvas.width = canvas.width < 360 ? 360 : canvas.width;
     canvas.height = canvas.width * 1.2;
 
     win.addEventListener('resize', () => {
         canvas.width = win.innerWidth < 535 ? win.innerWidth - 30 : 505;
+        canvas.width = canvas.width < 360 ? 360 : canvas.width;
         canvas.height = canvas.width * 1.2;
         navButtonsDiv.style.maxWidth = canvas.width + "px";
     });
