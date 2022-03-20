@@ -11,7 +11,8 @@ class Enemy {
         // Off screen locations of X(column) and Y(row) for randomly spawning enemies from given array.
         // values are implemented from engine.js (line: 137)
         this.location_X = [-101, -202, -303, -404];
-        this.location_Y = [83 - 20, 166 - 20, 249 - 20]; // -20 to avoid bug on canvas border (top and bottom)
+        // 20px up from bottom of row.
+        this.location_Y = [tileHeight() - Math.round(tileHeight() * 0.2410), (tileHeight() * 2) - Math.round(tileHeight() * 0.2410), (tileHeight() * 3) - Math.round(tileHeight() * 0.2410)];
         // Randomly set the enemy's starting position from the array above.
         this.x = 0;
         this.y = 0;
@@ -124,7 +125,7 @@ class Enemy {
 
     // Draw the enemy on the screen, required method for game
     render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y, imageWidth(), imageHeight());
     }
 }
 
@@ -149,6 +150,13 @@ class Player {
         // reset player
         this.reset();
     }
+    // get player's current row and column.
+    getRow() {
+        return Math.round(this.y / tileHeight());
+    }
+    getCol() {
+        return Math.round(this.x / tileWidth());
+    }
     // TODO: checkWin(). // check if player.y is less than 0.
     // TODO: changeSprite(). // use different sprite for different players.
     // TODO: hide() unhide(). // hide and unhide player.
@@ -171,8 +179,10 @@ class Player {
 
     // Resets Player
     reset() {
-        this.x = 200;
-        this.y = 400;
+        // set player's x to 2nd tile.
+        this.x = tileWidth() * 2;
+        // set player's y to 5th tile.
+        this.y = (tileHeight() * 5) - Math.round(tileHeight() * 0.15);
         this.resumeSpeed();
 
     }
@@ -187,11 +197,12 @@ class Player {
     resumeSpeed() {
         this.paused = false;
         // Set speed for player X: 100, Y: 83
-        this.speed_X = 100;
-        this.speed_Y = 83;
+        this.speed_X = Math.round(tileWidth() * 0.9901);
+        this.speed_Y = tileHeight();
     }
 
     update() {
+        game.update();
         // Check if player is on water.
         // If so, reset player to default location.
         if (this.y < 0) {
@@ -220,7 +231,7 @@ class Player {
 
     }
     render() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y, imageWidth(), imageHeight());
         game.render();
     }
 
@@ -303,26 +314,32 @@ class GameUI {
         this.Heart = {
             name: 'Heart',
             sprite: 'images/Heart-mini.png',
-            x: Math.floor(Math.random() * 5) * 101,
-            y: (Math.floor(Math.random() * 3) + 1) * 83 - 10,
+            x: Math.floor(Math.random() * 5) * tileWidth(),
+            y: (Math.floor(Math.random() * 3) + 1) * tileHeight() - Math.round(tileHeight() * 0.1205),
             // if this.level < 10, probability = 0.25 else probability = 0.1
-            probability: this.level < 10 ? 0.25 : 0.1,
+            probability: this.level < 15 ? 0.25 : 0.15,
             info: 'Collect hearts to gain a life. However Max lives is ' + this.MAX_LIVES + '.',
             hide: function () {
                 this.x = -200;
                 this.y = -200;
             },
             reset: function () {
-                this.x = Math.floor(Math.random() * 5) * 101;
-                this.y = (Math.floor(Math.random() * 3) + 1) * 83 - 10;
+                this.x = Math.floor(Math.random() * 5) * tileWidth();
+                this.y = (Math.floor(Math.random() * 3) + 1) * tileHeight() - Math.round(tileHeight() * 0.1205);
+            },
+            getRow: function () {
+                return Math.round(this.y / tileHeight());
+            },
+            getCol: function () {
+                return Math.round(this.x / tileWidth());
             }
         };
         this.Gem = {
             name: 'Gem',
             sprites: ['images/Gem Blue-mini.png', 'images/Gem Green-mini.png', 'images/Gem Orange-mini.png'],
             sprite: 'images/Gem Orange-mini.png',
-            x: Math.floor(Math.random() * 5) * 101,
-            y: (Math.floor(Math.random() * 3) + 1) * 83 - 30,
+            x: Math.floor(Math.random() * 5) * tileWidth(),
+            y: (Math.floor(Math.random() * 3) + 1) * tileHeight() - Math.round(tileHeight() * 0.3614),
             probability: 9.8,
             info: 'Collect gems to gain a score.',
             hide: function () {
@@ -330,8 +347,14 @@ class GameUI {
                 this.y = -200;
             },
             reset: function () {
-                this.x = Math.floor(Math.random() * 5) * 101;
-                this.y = (Math.floor(Math.random() * 3) + 1) * 83 - 30;
+                this.x = Math.floor(Math.random() * 5) * tileWidth();
+                this.y = (Math.floor(Math.random() * 3) + 1) * tileHeight() - Math.round(tileHeight() * 0.3614);
+            },
+            getRow: function () {
+                return Math.round(this.y / tileHeight());
+            },
+            getCol: function () {
+                return Math.round(this.x / tileWidth());
             }
         };
         this.collectibles = [this.Heart, this.Gem];
@@ -584,21 +607,46 @@ class GameUI {
 
     }
 
-    update() { }
+    update() {
+        // update player
+        player.x = tileWidth() * player.getCol();
+        player.y = (tileHeight() * player.getRow()) - Math.round(tileHeight() * 0.15);
+        if (!player.paused) {
+            player.speed_X = Math.round(tileWidth() * 0.9901);
+            player.speed_Y = tileHeight();
+        }
+        // update enemies
+        allEnemies.forEach(enemy => {
+            let index = enemy.location_Y.indexOf(enemy.y);
+            enemy.location_Y = [tileHeight() - Math.round(tileHeight() * 0.2410), (tileHeight() * 2) - Math.round(tileHeight() * 0.2410), (tileHeight() * 3) - Math.round(tileHeight() * 0.2410)];
+            enemy.y = enemy.location_Y[index];
+        });
+        // update collectibles
+        this.collectibles.forEach(item => {
+            if (item.x > 0 && item.y > 0) {
+                item.x = tileWidth() * item.getCol();
+                if (item.name === 'Gem') {
+                    item.y = (tileHeight() * item.getRow()) - Math.round(tileHeight() * 0.3614);
+                } else {
+                    item.y = (tileHeight() * item.getRow()) - Math.round(tileHeight() * 0.1205);
+                }
+            }
+        });
+     }
 
     render() {
         ctx.font = '20px sans-serif';
         // fill text with material red color
         ctx.fillStyle = '#b71c1c';
-        ctx.fillText('Score: ' + this.score, 10, 25);
-        ctx.fillText('Level: ' + this.level, 215, 25);
-        ctx.fillText('Lives: ' + this.lives, 420, 25);
+        ctx.fillText('Score: ' + this.score, Math.round(canvasWidth() * 0.01980), 25);
+        ctx.fillText('Level: ' + this.level, Math.round(canvasWidth() * 0.42574), 25);
+        ctx.fillText('Lives: ' + this.lives, Math.round(canvasWidth() * 0.83168), 25);
 
         // draw heart according to probability
-        ctx.drawImage(Resources.get(this.Heart.sprite), this.Heart.x, this.Heart.y);
+        ctx.drawImage(Resources.get(this.Heart.sprite), this.Heart.x, this.Heart.y, imageWidth(), imageHeight());
         // draw gem
         //this.Gem.sprite = this.Gem.sprites[Math.floor(Math.random() * this.Gem.sprites.length)];
-        ctx.drawImage(Resources.get(this.Gem.sprite), this.Gem.x, this.Gem.y);
+        ctx.drawImage(Resources.get(this.Gem.sprite), this.Gem.x, this.Gem.y, imageWidth(), imageHeight());
 
 
     }
@@ -1001,6 +1049,28 @@ const water_sprites = [
         'images/char-princess-girl.png',
     ];
 
+// for responsive design
+canvasWidth = () => {
+    // canvas width
+    let width = window.innerWidth < 535 ? window.innerWidth - 30 : 505;
+    width = width < 360 ? 360 : width;
+    return width;
+};
+canvasHeight = () => {
+    return canvasWidth() * 1.2; // 1.2 is canvas's height to width ratio
+};
+tileWidth = () => {
+    return Math.round(canvasWidth() / 5); // 5 is no. of columns
+};
+tileHeight = () => {
+    return Math.round(tileWidth() * 0.8218); // 0.8218 is ratio of height to width for tile
+};
+imageWidth = () => {
+    return tileWidth();
+};
+imageHeight = () => {
+        return Math.round(tileWidth() * 1.6931); // 1.6931 is ratio of height to width for image
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
