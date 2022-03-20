@@ -238,34 +238,38 @@ class Player {
     // Handle input from the user.
     handleInput(key) {
         if (key === 'left') {
-            if (this.x > 0) {
-            this.x -= this.speed_X;
-            }
-            if(!game.modal.isHidden) {
+            if (game.modal.isHidden) {
+                if (this.x > 0) {
+                this.x -= this.speed_X;
+                }
+            } else {
                 game.modal.prevSprite();
             }
         }
         if (key === 'right') {
-            if (this.x < 400) {
-            this.x += this.speed_X;
-            }
-            if (!game.modal.isHidden) {
+            if (game.modal.isHidden) {
+                if (this.x < tileWidth() * 4) {
+                this.x += this.speed_X;
+                }
+            } else {
                 game.modal.nextSprite();
             }
         }
         if (key === 'up') {
-            if (this.y > 0) {
-            this.y -= this.speed_Y;
-            }
-            if (!game.modal.isHidden) {
+            if (game.modal.isHidden) {
+                if (this.y > 0) {
+                this.y -= this.speed_Y;
+                }
+            } else {
                 game.modal.prevSprite();
             }
         }
         if (key === 'down') {
-            if (this.y < 400) {
-            this.y += this.speed_Y;
-            }
-            if (!game.modal.isHidden) {
+            if (game.modal.isHidden) {
+                if (this.y < (tileHeight() * 5) - Math.round(tileHeight() * 0.15)) {
+                this.y += this.speed_Y;
+                }
+            } else {
                 game.modal.nextSprite();
             }
         }
@@ -275,7 +279,6 @@ class Player {
                 game.modal.type = 'pause';
                 game.modal.show();
             } else if (game.modal.type === 'game-over') {
-
                 game.modal.restart();
             } else {
                 game.modal.resume();
