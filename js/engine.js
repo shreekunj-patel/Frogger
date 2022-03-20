@@ -26,8 +26,18 @@ var Engine = (function (global) {
         navButtonsDiv = doc.createElement('div'),
         lastTime;
 
-    canvas.width = 505;
-    canvas.height = 606;
+    // canvas.width = 505;
+    // canvas.height = 606;
+
+    // Making canvas responsive
+    canvas.width = win.innerWidth < 535 ? win.innerWidth-30 : 505;
+    canvas.height = canvas.width * 1.2;
+
+    win.addEventListener('resize', () => {
+        canvas.width = win.innerWidth < 535 ? win.innerWidth - 30 : 505;
+        canvas.height = canvas.width * 1.2;
+        navButtonsDiv.style.maxWidth = canvas.width + "px";
+    });
 
     navButtonsDiv.className = "navigation-buttons";
     navButtonsDiv.style.maxWidth = canvas.width + "px";
@@ -166,7 +176,11 @@ var Engine = (function (global) {
         var rowImages = game.rowImages,
             numRows = 6,
             numCols = 5,
-            row, col;
+            row, col,
+            tileWidth = canvas.width / numCols,
+            tileHeight = tileWidth * 0.8218,
+            imageWidth = Math.round(tileWidth),
+            imageHeight = Math.round(tileWidth * 1.6931);
 
         // Before drawing, clear existing canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -184,7 +198,7 @@ var Engine = (function (global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                ctx.drawImage(Resources.get(rowImages[row]), col * tileWidth, row * tileHeight, imageWidth, imageHeight);
             }
         }
 
